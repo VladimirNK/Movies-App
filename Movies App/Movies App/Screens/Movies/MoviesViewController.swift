@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MoviesViewController.swift
 //  Movies App
 //
 //  Created by Vladimir Kozlov on 22.06.2024.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+final class MoviesViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
