@@ -62,7 +62,7 @@ struct Movie {
         let releaseDate: String
         
         init(response: Movie.Item) {
-            self.posterPath = response.posterPath
+            self.posterPath = Constants.API.imagePath + response.posterPath
             self.title = response.title
             self.genreIDS = response.genreIDS
             self.voteAverage = response.voteAverage

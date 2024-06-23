@@ -19,7 +19,6 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
     enum Output {
         case fetchMoviesDidFail(error: ApiError)
         case fetchMoviesDidSucceed(movies: [Movie.ViewModel])
-        case toggleButton(isEnabled: Bool)
         case spinner(state: Bool)
     }
     
@@ -57,10 +56,10 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
             guard let self else { return }
             
             output.send(.spinner(state: true))
-            try await Task.sleep(nanoseconds: 3 * 1_000_000_000)
+            try await Task.sleep(nanoseconds: 2 * 1_000_000_000)
             
             do {
-                let request = try await moviesService.getPopularMovies(page: 1, language: "en-US")
+                let request = try await moviesService.getPopularMovies(page: 1, language: "uk-UA") //en-US
                 let movies = request.results.map { Movie.ViewModel(response: $0) }
                 output.send(.fetchMoviesDidSucceed(movies: movies))
             } catch let error as ApiError {
