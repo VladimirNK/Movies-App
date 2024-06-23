@@ -15,7 +15,7 @@ extension MoviesEndpoint: Endpoint {
     var path: String {
         switch self {
         case .popularMovies:
-            return "/movie/popular"
+            return "/3/movie/popular"
         }
     }
     

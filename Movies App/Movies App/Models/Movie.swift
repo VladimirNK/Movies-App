@@ -53,6 +53,22 @@ struct Movie {
             case voteCount = "vote_count"
         }
     }
+    
+    struct ViewModel {
+        let posterPath: String
+        let title: String
+        let genreIDS: [Int]
+        let voteAverage: Double
+        let releaseDate: String
+        
+        init(response: Movie.Item) {
+            self.posterPath = response.posterPath
+            self.title = response.title
+            self.genreIDS = response.genreIDS
+            self.voteAverage = response.voteAverage
+            self.releaseDate = response.releaseDate
+        }
+    }
 }
 
 struct PopularMoviesParams: Encodable {

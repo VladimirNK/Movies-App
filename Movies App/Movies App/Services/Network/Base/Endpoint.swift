@@ -39,6 +39,7 @@ extension Endpoint {
         if let queryItems = queryItems {
             urlComponents.queryItems = queryItems
         }
+        
         guard let url = urlComponents.url else {
             throw ApiError(errorCode: 0, message: "URL error")
         }
