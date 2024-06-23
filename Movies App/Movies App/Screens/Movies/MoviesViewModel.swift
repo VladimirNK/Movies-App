@@ -13,6 +13,7 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
     enum Input {
         case viewDidLoad
         case refreshButtonDidTap
+        case cellDidTap
     }
     
     enum Output {
@@ -24,11 +25,13 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
     
     // MARK: - Properties
     
+    private let router: MoviesRouter
     private let moviesService: MoviesService
     
     // MARK: - Init
     
-    init(moviesService: MoviesService) {
+    init(router: MoviesRouter, moviesService: MoviesService) {
+        self.router = router
         self.moviesService = moviesService
     }
     
@@ -39,6 +42,8 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
             switch event {
             case .viewDidLoad, .refreshButtonDidTap:
                 self?.getMovies()
+            case .cellDidTap:
+                self?.navigateToDetails()
             }
         }.store(in: &cancellables)
          
@@ -64,7 +69,12 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
             
             output.send(.spinner(state: false))
         }
-        
+    }
+    
+    // MARK: - Navigation
+    
+    private func navigateToDetails() {
+        router.navigate(to: .details)
     }
     
 }

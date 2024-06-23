@@ -125,6 +125,9 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
 
 extension MoviesViewController: UITableViewDelegate {
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        input.send(.cellDidTap)
+    }
 }
 
 extension MoviesViewController: UITableViewDataSource {

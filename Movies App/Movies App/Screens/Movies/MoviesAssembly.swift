@@ -10,8 +10,11 @@ import UIKit
 final class MoviesAssembly {
     
     func assemble() -> UIViewController {
+        let router = MoviesRouterImpl()
         let moviesService = MoviesServiceImpl()
-        let viewModel = MoviesViewModel(moviesService: moviesService)
-        return MoviesViewController(viewModel: viewModel)
+        let viewModel = MoviesViewModel(router: router, moviesService: moviesService)
+        let viewController = MoviesViewController(viewModel: viewModel)
+        router.view = viewController
+        return viewController
     }
 }
