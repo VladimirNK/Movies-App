@@ -7,9 +7,14 @@
 
 import UIKit
 
+enum SortOption: String, CaseIterable {
+    case releaseDate = "Release Date"
+    case userScore = "User Score"
+}
+
 enum MoviesRoute {
     case details
-    case sortAction
+    case sort(current: SortOption, onSelect: (SortOption) -> Void)
 }
 
 protocol MoviesRouter {
@@ -24,7 +29,7 @@ final class MoviesRouterImpl: MoviesRouter {
         switch route {
         case .details:
             navigateToDetails()
-        case .sortAction:
+        case .sort(let current, let onSelect):
             break
         }
     }
@@ -36,4 +41,5 @@ final class MoviesRouterImpl: MoviesRouter {
         vc.navigationItem.largeTitleDisplayMode = .never
         navController.pushViewController(vc, animated: true)
     }
+    
 }

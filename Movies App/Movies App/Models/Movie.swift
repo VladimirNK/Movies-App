@@ -24,7 +24,7 @@ struct Movie {
     
     struct Item: Decodable {
         let adult: Bool
-        let backdropPath: String
+        let backdropPath: String?
         let genreIDS: [Int]
         let id: Int
         let originalLanguage: String
@@ -55,18 +55,20 @@ struct Movie {
     }
     
     struct ViewModel {
+        let id: Int
         let posterPath: String
         let title: String
         let genreIDS: [Int]
         let voteAverage: Double
-        let releaseDate: String
+        let releaseDate: Date?
         
         init(response: Movie.Item) {
+            self.id = response.id
             self.posterPath = Constants.API.imagePath + response.posterPath
             self.title = response.title
             self.genreIDS = response.genreIDS
             self.voteAverage = response.voteAverage
-            self.releaseDate = response.releaseDate
+            self.releaseDate = response.releaseDate.toDate()
         }
     }
 }

@@ -12,17 +12,23 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
     
     enum Input {
         case viewDidLoad
-        case refreshButtonDidTap
         case cellDidTap
+        case selectFilterDidTap(SortOption)
+        case fetchMoreMovies
     }
     
     enum Output {
         case fetchMoviesDidFail(error: ApiError)
-        case fetchMoviesDidSucceed(movies: [Movie.ViewModel])
+        case fetchMoviesDidSucceed
         case spinner(state: Bool)
+        case filter(selected: SortOption, movies: [Movie.ViewModel])
     }
     
     // MARK: - Properties
+    
+    var movies: [Movie.ViewModel] = []
+    var currentPage: Int = 1
+    var totalPages: Int = 0
     
     private let router: MoviesRouter
     private let moviesService: MoviesService
@@ -32,6 +38,8 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
     init(router: MoviesRouter, moviesService: MoviesService) {
         self.router = router
         self.moviesService = moviesService
+        super.init()
+        setupValues()
     }
     
     // MARK: - Public methods
@@ -39,10 +47,15 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
     override func transform(input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
         input.sink { [weak self] event in
             switch event {
-            case .viewDidLoad, .refreshButtonDidTap:
-                self?.getMovies()
+            case .viewDidLoad:
+                self?.fetchMovies()
             case .cellDidTap:
                 self?.navigateToDetails()
+            case .selectFilterDidTap(let sortOption):
+                break
+            case .fetchMoreMovies:
+                self?.currentPage += 1
+                self?.fetchMovies()
             }
         }.store(in: &cancellables)
          
@@ -51,17 +64,29 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
     
     // MARK: - Private methods
     
-    private func getMovies() {
+    private func setupValues() {
+        /// Fetch movie genres if its nil for now
+        if AppUserDefaults.genres == nil {
+            fetchGenres()
+        }
+    }
+    
+    private func fetchMovies() {
         Task { [weak self] in
             guard let self else { return }
             
             output.send(.spinner(state: true))
-            try await Task.sleep(nanoseconds: 2 * 1_000_000_000)
+            //try await Task.sleep(nanoseconds: 2 * 1_000_000_000)
             
             do {
-                let request = try await moviesService.getPopularMovies(page: 1, language: "uk-UA") //en-US
-                let movies = request.results.map { Movie.ViewModel(response: $0) }
-                output.send(.fetchMoviesDidSucceed(movies: movies))
+                let response = try await moviesService.getPopularMovies(page: currentPage, language: "uk-UA") //en-US
+                let moviesPage = response.results.map { Movie.ViewModel(response: $0) }
+                let uniqueMovies = moviesPage.filter { newMovie in
+                    !self.movies.contains(where: { $0.id == newMovie.id })
+                }
+                self.movies.append(contentsOf: uniqueMovies)
+                self.totalPages = response.totalPages
+                output.send(.fetchMoviesDidSucceed)
             } catch let error as ApiError {
                 output.send(.fetchMoviesDidFail(error: error))
             }
@@ -70,10 +95,49 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
         }
     }
     
+    private func fetchGenres() {
+        Task { [weak self] in
+            guard let self else { return }
+            output.send(.spinner(state: true))
+            
+            do {
+                let response = try await moviesService.getGenres(language: "uk")
+                let genreDict = response.genres.reduce(into: [Int: String]()) { dict, genre in
+                    dict[genre.id] = genre.name
+                }
+                AppUserDefaults.genres = genreDict
+            } catch let error as ApiError {
+                print(error)
+            }
+            output.send(.spinner(state: false))
+        }
+    }
+    
+    private func sortMovies(by sort: SortOption, movies: [Movie.ViewModel]) {
+        var sortedMovies: [Movie.ViewModel] = []
+        
+        switch sort {
+        case .releaseDate:
+            sortedMovies = movies.sorted {
+                guard let date1 = $0.releaseDate, let date2 = $1.releaseDate else {
+                    return false
+                    // work with sorting error
+                }
+                return date1 > date2
+            }
+        case .userScore:
+            sortedMovies = movies.sorted { $0.voteAverage > $1.voteAverage }
+        }
+        output.send(.filter(selected: sort, movies: sortedMovies))
+    }
+    
     // MARK: - Navigation
     
     private func navigateToDetails() {
         router.navigate(to: .details)
     }
     
+    private func showSortSheet(selected: SortOption, onSelect: @escaping (SortOption) -> Void) {
+        router.navigate(to: .sort(current: selected, onSelect: onSelect))
+    }
 }

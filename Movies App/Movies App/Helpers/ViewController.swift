@@ -17,14 +17,14 @@ class ViewController<ViewModel: ViewModelProtocol>: UIViewController {
     
     // MARK: - Properties
     
-    let viewModel: ViewModel
+    let vm: ViewModel
     let input: PassthroughSubject<ViewModel.Input, Never> = .init()
     var cancellables: Set<AnyCancellable> = []
     
     // MARK: - Init
     
     init(viewModel: ViewModel) {
-        self.viewModel = viewModel
+        self.vm = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     

@@ -9,6 +9,7 @@ import Foundation
 
 enum MoviesEndpoint {
     case popularMovies(params: PopularMoviesParams)
+    case getGenres(params: GenreParams)
 }
 
 extension MoviesEndpoint: Endpoint {
@@ -16,28 +17,26 @@ extension MoviesEndpoint: Endpoint {
         switch self {
         case .popularMovies:
             return "/3/movie/popular"
+        case .getGenres:
+            return "/3/genre/movie/list"
         }
     }
     
     var method: RequestMethod {
-        switch self {
-        case .popularMovies:
-            return .get
-        }
+        return .get
     }
     
     var queryItems: [URLQueryItem]? {
         switch self {
         case .popularMovies(let params):
             return params.toQueryItems
+        case .getGenres(let params):
+            return params.toQueryItems
         }
     }
     
     var body: [String : Any]? {
-        switch self {
-        case .popularMovies:
-            return nil
-        }
+        return nil
     }
 }
 

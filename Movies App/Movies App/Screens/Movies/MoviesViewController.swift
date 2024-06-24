@@ -28,14 +28,15 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
     }()
     
     private lazy var spinner: UIActivityIndicatorView = {
-        let view = UIActivityIndicatorView(style: .medium)
+        let view = UIActivityIndicatorView(style: .large)
         view.color = .black
         return view
     }()
     
     // MARK: - Properties
     
-    private var movies: [Movie.ViewModel] = []
+    
+    private var selectedSortOption: SortOption = .userScore
     
     // MARK: - Lifecycle
     
@@ -52,14 +53,18 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
         view.backgroundColor = .black
         addViews()
         setupConstraints()
-        title = "Title goes here"
+        title = "Popular Movies"
         setupNavigationBar()
     }
     
     private func setupNavigationBar() {
-        let sortButton = UIBarButtonItem(systemItem: .refresh)
-        sortButton.target = self
-        sortButton.action = #selector(sortButtonTapped)
+        let image = UIImage(systemName: "slider.horizontal.3")
+        let sortButton = UIBarButtonItem(
+            image: image,
+            style: .plain,
+            target: self,
+            action: #selector(sortButtonTapped)
+        )
         navigationItem.rightBarButtonItem = sortButton
     }
     
@@ -80,16 +85,16 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
     }
     
     @objc func buttonDidTap() {
-        input.send(.refreshButtonDidTap)
+        
     }
     
     @objc func sortButtonTapped() {
-        print("Sort button tapped!")
+        //input.send(.selectFilterDidTap)
     }
     
     
     private func bind() {
-        let output = viewModel.transform(input: input.eraseToAnyPublisher())
+        let output = vm.transform(input: input.eraseToAnyPublisher())
         
         output
             .receive(on: DispatchQueue.main)
@@ -98,11 +103,12 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
                 switch event {
                 case .fetchMoviesDidFail(let error):
                     print(error)
-                case .fetchMoviesDidSucceed(let movies):
-                    self.movies = movies
+                case .fetchMoviesDidSucceed:
                     moviesCollectionView.reloadData()
                 case .spinner(state: let bool):
                     bool ? spinner.startAnimating() : spinner.stopAnimating()
+                case .filter(selected: let selected, movies: let movies):
+                    break
                 }
             }.store(in: &cancellables)
     }
@@ -119,10 +125,22 @@ extension MoviesViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        let lessTotalPages = vm.currentPage < vm.totalPages
+        
+        /// Movies count offset to make pagination less noticeable to the user
+        let loadingOffset = 5
+        
+        // TODO: - when we scroll to top we have redunant API call
+        if lessTotalPages && (indexPath.row == vm.movies.count - loadingOffset) {
+            input.send(.fetchMoreMovies)
+        }
+        
         cell.contentView.layer.masksToBounds = true
         let radius = cell.contentView.layer.cornerRadius
         cell.layer.shadowPath = UIBezierPath(roundedRect: cell.bounds, cornerRadius: radius).cgPath
     }
+    
+    
 }
 
 // MARK: - UICollectionViewDataSource
@@ -130,12 +148,12 @@ extension MoviesViewController: UICollectionViewDelegate {
 extension MoviesViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return movies.count
+        return vm.movies.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(MovieCell.self, for: indexPath)
-        let model = movies[indexPath.row]
+        let model = vm.movies[indexPath.row]
         cell.configure(with: model)
         return cell
     }
@@ -148,7 +166,7 @@ extension MoviesViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let contentInset = collectionView.adjustedContentInset
         let cellWidth = collectionView.bounds.width - contentInset.left - contentInset.right
-        let cellHeight: CGFloat = cellWidth / 2
+        let cellHeight: CGFloat = cellWidth * 0.65
         
         return CGSize(width: cellWidth, height: cellHeight)
     }
