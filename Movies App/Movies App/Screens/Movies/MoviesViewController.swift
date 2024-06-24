@@ -21,10 +21,18 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.showsVerticalScrollIndicator = false
+        collectionView.alwaysBounceVertical = true
+        collectionView.refreshControl = refreshControl
         
         collectionView.register(MovieCell.self)
         collectionView.contentInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
         return collectionView
+    }()
+    
+    private lazy var refreshControl: UIRefreshControl = {
+        let view = UIRefreshControl()
+        view.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
+        return view
     }()
     
     private lazy var spinner: UIActivityIndicatorView = {
@@ -84,8 +92,8 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
         }
     }
     
-    @objc func buttonDidTap() {
-        
+    @objc func didPullToRefresh() {
+        input.send(.didPullToRefresh)
     }
     
     @objc func sortButtonTapped() {
@@ -109,6 +117,8 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
                     bool ? spinner.startAnimating() : spinner.stopAnimating()
                 case .filter(selected: let selected, movies: let movies):
                     break
+                case .endRefreshing:
+                    refreshControl.endRefreshing()
                 }
             }.store(in: &cancellables)
     }

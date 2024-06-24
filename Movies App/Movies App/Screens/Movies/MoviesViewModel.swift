@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import SDWebImage
 
 final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Output> {
     
@@ -15,6 +16,7 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
         case cellDidTap
         case selectFilterDidTap(SortOption)
         case fetchMoreMovies
+        case didPullToRefresh
     }
     
     enum Output {
@@ -22,6 +24,7 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
         case fetchMoviesDidSucceed
         case spinner(state: Bool)
         case filter(selected: SortOption, movies: [Movie.ViewModel])
+        case endRefreshing
     }
     
     // MARK: - Properties
@@ -46,16 +49,20 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
     
     override func transform(input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
         input.sink { [weak self] event in
+            guard let self else { return }
             switch event {
             case .viewDidLoad:
-                self?.fetchMovies()
+                fetchMovies(page: currentPage)
             case .cellDidTap:
-                self?.navigateToDetails()
+                navigateToDetails()
             case .selectFilterDidTap(let sortOption):
                 break
             case .fetchMoreMovies:
-                self?.currentPage += 1
-                self?.fetchMovies()
+                currentPage += 1
+                fetchMovies(page: currentPage)
+            case .didPullToRefresh:
+                clearCache()
+                fetchMovies(page: 1)
             }
         }.store(in: &cancellables)
          
@@ -71,7 +78,12 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
         }
     }
     
-    private func fetchMovies() {
+    private func clearCache() {
+        SDImageCache.shared.clearMemory()
+        SDImageCache.shared.clearDisk()
+    }
+    
+    private func fetchMovies(page: Int) {
         Task { [weak self] in
             guard let self else { return }
             
@@ -79,7 +91,7 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
             //try await Task.sleep(nanoseconds: 2 * 1_000_000_000)
             
             do {
-                let response = try await moviesService.getPopularMovies(page: currentPage, language: "uk-UA") //en-US
+                let response = try await moviesService.getPopularMovies(page: page, language: "uk-UA") //en-US
                 let moviesPage = response.results.map { Movie.ViewModel(response: $0) }
                 let uniqueMovies = moviesPage.filter { newMovie in
                     !self.movies.contains(where: { $0.id == newMovie.id })
@@ -90,8 +102,8 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
             } catch let error as ApiError {
                 output.send(.fetchMoviesDidFail(error: error))
             }
-            
             output.send(.spinner(state: false))
+            output.send(.endRefreshing)
         }
     }
     
