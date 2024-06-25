@@ -14,7 +14,8 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
     enum Input {
         case viewDidLoad
         case cellDidTap
-        case selectFilterDidTap(SortOption)
+        case sortDidTap(completion: ((SortOption) -> Void)?)
+        case sortSelected(SortOption)
         case fetchMoreMovies
         case didPullToRefresh
         case searchBar(text: String)
@@ -24,7 +25,7 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
         case fetchMoviesDidFail(error: ApiError)
         case updateMovies(movies: [Movie.ViewModel])
         case spinner(state: Bool)
-        case filter(selected: SortOption, movies: [Movie.ViewModel])
+        case sort(selected: SortOption, movies: [Movie.ViewModel])
         case endRefreshing
     }
     
@@ -35,6 +36,7 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
     var totalPages: Int = 0
     
     private var searchText: String = ""
+    private var currentSortOption: SortOption = .userScore
     
     private let router: MoviesRouter
     private let moviesService: MoviesService
@@ -58,8 +60,9 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
                 fetchMovies(page: currentPage)
             case .cellDidTap:
                 navigateToDetails()
-            case .selectFilterDidTap(let sortOption):
-                break
+            case .sortSelected(let sortOption):
+                currentSortOption = sortOption
+                sortMovies(by: sortOption)
             case .fetchMoreMovies:
                 currentPage += 1
                 fetchMovies(page: currentPage)
@@ -68,6 +71,8 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
                 fetchMovies(page: 1)
             case .searchBar(let searchText):
                 filterMovies(by: searchText)
+            case .sortDidTap(let completion):
+                showSortSheet(selected: currentSortOption, onSelect: completion)
             }
         }.store(in: &cancellables)
          
@@ -81,6 +86,20 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
         if AppUserDefaults.genres == nil {
             fetchGenres()
         }
+    }
+    
+    private func sortMovies(by sortOption: SortOption) {
+        var sortedMovies: [Movie.ViewModel] = []
+        
+        switch sortOption {
+        case .alphabet:
+            sortedMovies = movies.sorted(by: { $0.title < $1.title })
+        case .releaseDate:
+            sortedMovies = movies.sorted(by: { $0.releaseDate! < $1.releaseDate! })
+        case .userScore:
+            sortedMovies = movies.sorted(by: { $0.voteAverage > $1.voteAverage })
+        }
+        output.send(.updateMovies(movies: sortedMovies))
     }
     
     private func clearCache() {
@@ -103,7 +122,6 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
             guard let self else { return }
             
             output.send(.spinner(state: true))
-            //try await Task.sleep(nanoseconds: 2 * 1_000_000_000)
             
             do {
                 let response = try await moviesService.getPopularMovies(page: page, language: "uk-UA") //en-US
@@ -113,7 +131,7 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
                 }
                 self.movies.append(contentsOf: uniqueMovies)
                 self.totalPages = response.totalPages
-                output.send(.updateMovies(movies: self.movies))
+                sortMovies(by: currentSortOption)
             } catch let error as ApiError {
                 output.send(.fetchMoviesDidFail(error: error))
             }
@@ -140,23 +158,7 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
         }
     }
     
-    private func sortMovies(by sort: SortOption, movies: [Movie.ViewModel]) {
-        var sortedMovies: [Movie.ViewModel] = []
-        
-        switch sort {
-        case .releaseDate:
-            sortedMovies = movies.sorted {
-                guard let date1 = $0.releaseDate, let date2 = $1.releaseDate else {
-                    return false
-                    // work with sorting error
-                }
-                return date1 > date2
-            }
-        case .userScore:
-            sortedMovies = movies.sorted { $0.voteAverage > $1.voteAverage }
-        }
-        output.send(.filter(selected: sort, movies: sortedMovies))
-    }
+   
     
     // MARK: - Navigation
     
@@ -164,7 +166,7 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
         router.navigate(to: .details)
     }
     
-    private func showSortSheet(selected: SortOption, onSelect: @escaping (SortOption) -> Void) {
+    private func showSortSheet(selected: SortOption, onSelect: ((SortOption) -> Void)?) {
         router.navigate(to: .sort(current: selected, onSelect: onSelect))
     }
 }

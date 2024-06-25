@@ -63,7 +63,7 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
     
     private var movies: [Movie.ViewModel] = []
     
-    private var selectedSortOption: SortOption = .userScore
+    
     
     // MARK: - Lifecycle
     
@@ -128,7 +128,10 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
     }
     
     @objc func sortButtonTapped() {
-        //input.send(.selectFilterDidTap)
+        input.send(.sortDidTap(completion: { [weak self] sortOption in
+            guard let self else { return }
+            input.send(.sortSelected(sortOption))
+        }) )
     }
     
     
@@ -148,7 +151,7 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
                     nothingFoundLabel.isHidden = !movies.isEmpty
                 case .spinner(state: let bool):
                     bool ? spinner.startAnimating() : spinner.stopAnimating()
-                case .filter(selected: let selected, movies: let movies):
+                case .sort(selected: let selected, movies: let movies):
                     break
                 case .endRefreshing:
                     refreshControl.endRefreshing()
