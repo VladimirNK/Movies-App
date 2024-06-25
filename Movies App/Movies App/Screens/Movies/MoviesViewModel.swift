@@ -131,6 +131,7 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
                 }
                 self.movies.append(contentsOf: uniqueMovies)
                 self.totalPages = response.totalPages
+                print(movies.first?.id)
                 sortMovies(by: currentSortOption)
             } catch let error as ApiError {
                 output.send(.fetchMoviesDidFail(error: error))

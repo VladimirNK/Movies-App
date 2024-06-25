@@ -78,7 +78,7 @@ final class MovieCell: UICollectionViewCell {
     public func configure(with model: Movie.ViewModel) {
         movieTitle.text = model.title
         posterImageView.loadImage(from: model.posterPath)
-        releaseDateLabel.text = model.releaseDate?.yearAsString()
+        releaseDateLabel.text = model.releaseDate.yearAsString()
         genresLabel.text = genreNames(from: model.genreIDS)
         let roundedRating = model.voteAverage.roundedToWholeNumber()
         ratingView.setProgress(to: roundedRating)
