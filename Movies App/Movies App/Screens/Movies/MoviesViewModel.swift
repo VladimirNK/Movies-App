@@ -17,11 +17,12 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
         case selectFilterDidTap(SortOption)
         case fetchMoreMovies
         case didPullToRefresh
+        case searchBar(text: String)
     }
     
     enum Output {
         case fetchMoviesDidFail(error: ApiError)
-        case fetchMoviesDidSucceed
+        case updateMovies(movies: [Movie.ViewModel])
         case spinner(state: Bool)
         case filter(selected: SortOption, movies: [Movie.ViewModel])
         case endRefreshing
@@ -32,6 +33,8 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
     var movies: [Movie.ViewModel] = []
     var currentPage: Int = 1
     var totalPages: Int = 0
+    
+    private var searchText: String = ""
     
     private let router: MoviesRouter
     private let moviesService: MoviesService
@@ -63,6 +66,8 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
             case .didPullToRefresh:
                 clearCache()
                 fetchMovies(page: 1)
+            case .searchBar(let searchText):
+                filterMovies(by: searchText)
             }
         }.store(in: &cancellables)
          
@@ -83,6 +88,16 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
         SDImageCache.shared.clearDisk()
     }
     
+    private func filterMovies(by searchText: String) {
+        let filteredMovies: [Movie.ViewModel]
+        if searchText.isEmpty {
+            filteredMovies = movies
+        } else {
+            filteredMovies = movies.filter { $0.title.lowercased().contains(searchText.lowercased()) }
+        }
+        output.send(.updateMovies(movies: filteredMovies))
+    }
+    
     private func fetchMovies(page: Int) {
         Task { [weak self] in
             guard let self else { return }
@@ -98,7 +113,7 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
                 }
                 self.movies.append(contentsOf: uniqueMovies)
                 self.totalPages = response.totalPages
-                output.send(.fetchMoviesDidSucceed)
+                output.send(.updateMovies(movies: self.movies))
             } catch let error as ApiError {
                 output.send(.fetchMoviesDidFail(error: error))
             }

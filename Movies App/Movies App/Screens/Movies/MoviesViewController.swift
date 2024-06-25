@@ -12,6 +12,15 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
     
     // MARK: - UI Elements
     
+    private lazy var searchBar: UISearchBar = {
+        let searchBar = UISearchBar()
+        searchBar.placeholder = "Search..."
+        searchBar.delegate = self
+        searchBar.searchBarStyle = .default
+        searchBar.tintColor = .black
+        return searchBar
+    }()
+    
     private lazy var moviesCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -25,7 +34,7 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
         collectionView.refreshControl = refreshControl
         
         collectionView.register(MovieCell.self)
-        collectionView.contentInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 16, right: 16)
         return collectionView
     }()
     
@@ -41,8 +50,18 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
         return view
     }()
     
+    private lazy var nothingFoundLabel: UILabel = {
+        let view = UILabel()
+        view.text = "Nothing Found"
+        view.font = .typography(.body)
+        view.textColor = .black
+        view.isHidden = true
+        return view
+    }()
+    
     // MARK: - Properties
     
+    private var movies: [Movie.ViewModel] = []
     
     private var selectedSortOption: SortOption = .userScore
     
@@ -58,7 +77,7 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
     // MARK: - Methods
     
     private func setupUI() {
-        view.backgroundColor = .black
+        view.backgroundColor = .white
         addViews()
         setupConstraints()
         title = "Popular Movies"
@@ -77,18 +96,30 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
     }
     
     private func addViews() {
+        view.addSubview(searchBar)
         view.addSubview(moviesCollectionView)
         view.addSubview(spinner)
+        view.addSubview(nothingFoundLabel)
     }
     
     private func setupConstraints() {
+        searchBar.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.top.equalTo(view.safeAreaLayoutGuide)
+        }
+        
         moviesCollectionView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview()
-            $0.top.bottom.equalToSuperview()
+            $0.bottom.equalToSuperview()
+            $0.top.equalTo(searchBar.snp.bottom).offset(16)
         }
         
         spinner.snp.makeConstraints {
             $0.center.equalToSuperview()
+        }
+        
+        nothingFoundLabel.snp.makeConstraints {
+            $0.center.equalTo(moviesCollectionView)
         }
     }
     
@@ -111,8 +142,10 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
                 switch event {
                 case .fetchMoviesDidFail(let error):
                     print(error)
-                case .fetchMoviesDidSucceed:
+                case .updateMovies(let movies):
+                    self.movies = movies
                     moviesCollectionView.reloadData()
+                    nothingFoundLabel.isHidden = !movies.isEmpty
                 case .spinner(state: let bool):
                     bool ? spinner.startAnimating() : spinner.stopAnimating()
                 case .filter(selected: let selected, movies: let movies):
@@ -158,12 +191,12 @@ extension MoviesViewController: UICollectionViewDelegate {
 extension MoviesViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return vm.movies.count
+        return movies.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(MovieCell.self, for: indexPath)
-        let model = vm.movies[indexPath.row]
+        let model = movies[indexPath.row]
         cell.configure(with: model)
         return cell
     }
@@ -179,5 +212,14 @@ extension MoviesViewController: UICollectionViewDelegateFlowLayout {
         let cellHeight: CGFloat = cellWidth * 0.65
         
         return CGSize(width: cellWidth, height: cellHeight)
+    }
+}
+
+//MARK: - UISearchResultsUpdating
+
+extension MoviesViewController: UISearchBarDelegate {
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        input.send(.searchBar(text: searchText))
     }
 }
