@@ -60,7 +60,7 @@ struct Movie {
         let title: String
         let genreIDS: [Int]
         let voteAverage: Double
-        let releaseDate: Date?
+        let releaseDate: Date
         
         init(response: Movie.Item) {
             self.id = response.id

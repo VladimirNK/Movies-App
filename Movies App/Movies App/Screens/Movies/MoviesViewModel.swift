@@ -95,7 +95,7 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
         case .alphabet:
             sortedMovies = movies.sorted(by: { $0.title < $1.title })
         case .releaseDate:
-            sortedMovies = movies.sorted(by: { $0.releaseDate! < $1.releaseDate! })
+            sortedMovies = movies.sorted(by: { $0.releaseDate < $1.releaseDate })
         case .userScore:
             sortedMovies = movies.sorted(by: { $0.voteAverage > $1.voteAverage })
         }
