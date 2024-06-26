@@ -71,14 +71,16 @@ struct Movie {
             self.releaseDate = response.releaseDate.toDate()
         }
     }
-}
-
-struct PopularMoviesParams: Encodable {
-    let page: Int
-    let language: String
     
-    init(page: Int = 1, language: String = "en-US") {
-        self.page = page
-        self.language = language
+    struct Params: Encodable {
+        let page: Int
+        let language: String
+        
+        init(page: Int = 1, language: String = "en-US") {
+            self.page = page
+            self.language = language
+        }
     }
 }
+
+

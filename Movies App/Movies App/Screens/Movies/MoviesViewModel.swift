@@ -13,7 +13,7 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
     
     enum Input {
         case viewDidLoad
-        case cellDidTap
+        case cellDidTap(movie: Movie.ViewModel)
         case sortDidTap(completion: ((SortOption) -> Void)?)
         case sortSelected(SortOption)
         case fetchMoreMovies
@@ -22,10 +22,9 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
     }
     
     enum Output {
-        case fetchMoviesDidFail(error: ApiError)
-        case updateMovies(movies: [Movie.ViewModel])
+        case failed(error: ApiError)
+        case success(movies: [Movie.ViewModel])
         case spinner(state: Bool)
-        case sort(selected: SortOption, movies: [Movie.ViewModel])
         case endRefreshing
     }
     
@@ -50,7 +49,7 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
         setupValues()
     }
     
-    // MARK: - Public methods
+    // MARK: - Transform
     
     override func transform(input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
         input.sink { [weak self] event in
@@ -58,8 +57,8 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
             switch event {
             case .viewDidLoad:
                 fetchMovies(page: currentPage)
-            case .cellDidTap:
-                navigateToDetails()
+            case .cellDidTap(let movie):
+                navigateToDetails(movie: movie)
             case .sortSelected(let sortOption):
                 currentSortOption = sortOption
                 sortMovies(by: sortOption)
@@ -99,7 +98,7 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
         case .userScore:
             sortedMovies = movies.sorted(by: { $0.voteAverage > $1.voteAverage })
         }
-        output.send(.updateMovies(movies: sortedMovies))
+        output.send(.success(movies: sortedMovies))
     }
     
     private func clearCache() {
@@ -114,7 +113,7 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
         } else {
             filteredMovies = movies.filter { $0.title.lowercased().contains(searchText.lowercased()) }
         }
-        output.send(.updateMovies(movies: filteredMovies))
+        output.send(.success(movies: filteredMovies))
     }
     
     private func fetchMovies(page: Int) {
@@ -131,10 +130,9 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
                 }
                 self.movies.append(contentsOf: uniqueMovies)
                 self.totalPages = response.totalPages
-                print(movies.first?.id)
                 sortMovies(by: currentSortOption)
             } catch let error as ApiError {
-                output.send(.fetchMoviesDidFail(error: error))
+                output.send(.failed(error: error))
             }
             output.send(.spinner(state: false))
             output.send(.endRefreshing)
@@ -163,8 +161,8 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
     
     // MARK: - Navigation
     
-    private func navigateToDetails() {
-        router.navigate(to: .details)
+    private func navigateToDetails(movie: Movie.ViewModel) {
+        router.navigate(to: .details(movieId: movie.id))
     }
     
     private func showSortSheet(selected: SortOption, onSelect: ((SortOption) -> Void)?) {

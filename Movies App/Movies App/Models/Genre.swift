@@ -17,12 +17,14 @@ struct Genre {
         let id: Int
         let name: String
     }
-}
-
-struct GenreParams: Encodable {
-    let language: String
     
-    init(language: String = "en") {
-        self.language = language
+    struct Params: Encodable {
+        let language: String
+        
+        init(language: String = "en") {
+            self.language = language
+        }
     }
 }
+
+

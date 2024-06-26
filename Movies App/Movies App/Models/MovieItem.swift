@@ -12,7 +12,7 @@ struct MovieItem {
     struct Response: Decodable {
         let adult: Bool?
         let backdropPath: String?
-        let belongsToCollection: MovieCollection
+        let belongsToCollection: MovieCollection?
         let budget: Int?
         let genres: [Genre.Item]
         let homepage: String?
@@ -60,7 +60,7 @@ struct MovieItem {
         let title: String
         let releaseDate: Date
         let originCountry: [String]
-        let genres: [Genre.Item]
+        let genres: [String]
         let overview: String
         let voteAverage: Double
         let video: Bool
@@ -71,7 +71,7 @@ struct MovieItem {
             self.title = response.title
             self.releaseDate = response.releaseDate.toDate()
             self.originCountry = response.originCountry
-            self.genres = response.genres
+            self.genres = response.genres.map { $0.name }
             self.overview = response.overview
             self.voteAverage = response.voteAverage
             self.video = response.video
@@ -90,8 +90,8 @@ struct MovieItem {
     }
     
     struct ProductionCompany: Decodable {
-        let id: Int
-        let logoPath, name, originCountry: String
+        let id: Int?
+        let logoPath, name, originCountry: String?
         
         enum CodingKeys: String, CodingKey {
             case id
@@ -117,6 +117,14 @@ struct MovieItem {
             case englishName = "english_name"
             case iso639_1 = "iso_639_1"
             case name
+        }
+    }
+    
+    struct Params: Encodable {
+        let language: String
+        
+        init(language: String = "en-US") {
+            self.language = language
         }
     }
 }

@@ -134,7 +134,6 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
         }) )
     }
     
-    
     private func bind() {
         let output = vm.transform(input: input.eraseToAnyPublisher())
         
@@ -143,16 +142,14 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
             .sink { [weak self] event in
                 guard let self else { return }
                 switch event {
-                case .fetchMoviesDidFail(let error):
+                case .failed(let error):
                     print(error)
-                case .updateMovies(let movies):
+                case .success(let movies):
                     self.movies = movies
                     moviesCollectionView.reloadData()
                     nothingFoundLabel.isHidden = !movies.isEmpty
-                case .spinner(state: let bool):
-                    bool ? spinner.startAnimating() : spinner.stopAnimating()
-                case .sort(selected: let selected, movies: let movies):
-                    break
+                case .spinner(state: let loading):
+                    loading ? spinner.startAnimating() : spinner.stopAnimating()
                 case .endRefreshing:
                     refreshControl.endRefreshing()
                 }
@@ -167,7 +164,8 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
 extension MoviesViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        input.send(.cellDidTap)
+        let movie = movies[indexPath.row]
+        input.send(.cellDidTap(movie: movie))
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {

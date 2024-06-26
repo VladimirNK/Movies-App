@@ -14,7 +14,7 @@ enum SortOption: String, CaseIterable {
 }
 
 enum MoviesRoute {
-    case details
+    case details(movieId: Int)
     case sort(current: SortOption, onSelect: ((SortOption) -> Void)?)
 }
 
@@ -28,17 +28,16 @@ final class MoviesRouterImpl: MoviesRouter {
     
     func navigate(to route: MoviesRoute) {
         switch route {
-        case .details:
-            navigateToDetails()
+        case .details(let movieId):
+            navigateToDetails(movieId: movieId)
         case .sort(let current, let onSelect):
             showSortActionSheet(current: current, onSelect: onSelect)
         }
     }
     
-    private func navigateToDetails() {
+    private func navigateToDetails(movieId: Int) {
         guard let navController = view?.navigationController else { return }
-        let vc = DetailsAssembly().assemble()
-        vc.title = "Some title"
+        let vc = DetailsAssembly(id: movieId).assemble()
         vc.navigationItem.largeTitleDisplayMode = .never
         navController.pushViewController(vc, animated: true)
     }

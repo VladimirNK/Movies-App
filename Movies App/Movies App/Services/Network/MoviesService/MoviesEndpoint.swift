@@ -8,8 +8,9 @@
 import Foundation
 
 enum MoviesEndpoint {
-    case popularMovies(params: PopularMoviesParams)
-    case getGenres(params: GenreParams)
+    case popularMovies(params: Movie.Params)
+    case getGenres(params: Genre.Params)
+    case getMovie(id: Int, params: MovieItem.Params)
 }
 
 extension MoviesEndpoint: Endpoint {
@@ -19,6 +20,8 @@ extension MoviesEndpoint: Endpoint {
             return "/3/movie/popular"
         case .getGenres:
             return "/3/genre/movie/list"
+        case .getMovie(let id, _):
+            return "/3/movie/\(id)"
         }
     }
     
@@ -31,6 +34,8 @@ extension MoviesEndpoint: Endpoint {
         case .popularMovies(let params):
             return params.toQueryItems
         case .getGenres(let params):
+            return params.toQueryItems
+        case .getMovie(_, params: let params):
             return params.toQueryItems
         }
     }
