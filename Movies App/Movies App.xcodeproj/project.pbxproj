@@ -54,6 +54,10 @@
 		2D8439132C2883F500EBA6F5 /* AppUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8439122C2883F500EBA6F5 /* AppUserDefaults.swift */; };
 		2D8439162C28977400EBA6F5 /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8439152C28977400EBA6F5 /* RatingView.swift */; };
 		2D8439182C289DFC00EBA6F5 /* Double+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8439172C289DFC00EBA6F5 /* Double+Extension.swift */; };
+		2DC453112C2DA78400BE2B89 /* Localizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DC453102C2DA78400BE2B89 /* Localizable.swift */; };
+		2DC453132C2DA82500BE2B89 /* LocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DC453122C2DA82500BE2B89 /* LocalizedString.swift */; };
+		2DC453162C2DA97100BE2B89 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2DC453142C2DA97100BE2B89 /* Localizable.strings */; };
+		2DC453192C2DADB000BE2B89 /* SystemIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DC453182C2DADB000BE2B89 /* SystemIcons.swift */; };
 		2DFDFE432C2C9EAF0022AA09 /* PosterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DFDFE422C2C9EAF0022AA09 /* PosterViewController.swift */; };
 		2DFDFE452C2C9F2B0022AA09 /* PosterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DFDFE442C2C9F2B0022AA09 /* PosterViewModel.swift */; };
 		2DFDFE472C2C9F730022AA09 /* PosterRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DFDFE462C2C9F730022AA09 /* PosterRouter.swift */; };
@@ -105,6 +109,11 @@
 		2D8439122C2883F500EBA6F5 /* AppUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUserDefaults.swift; sourceTree = "<group>"; };
 		2D8439152C28977400EBA6F5 /* RatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingView.swift; sourceTree = "<group>"; };
 		2D8439172C289DFC00EBA6F5 /* Double+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extension.swift"; sourceTree = "<group>"; };
+		2DC453102C2DA78400BE2B89 /* Localizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localizable.swift; sourceTree = "<group>"; };
+		2DC453122C2DA82500BE2B89 /* LocalizedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedString.swift; sourceTree = "<group>"; };
+		2DC453152C2DA97100BE2B89 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		2DC453172C2DA9C800BE2B89 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
+		2DC453182C2DADB000BE2B89 /* SystemIcons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemIcons.swift; sourceTree = "<group>"; };
 		2DFDFE422C2C9EAF0022AA09 /* PosterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PosterViewController.swift; sourceTree = "<group>"; };
 		2DFDFE442C2C9F2B0022AA09 /* PosterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PosterViewModel.swift; sourceTree = "<group>"; };
 		2DFDFE462C2C9F730022AA09 /* PosterRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PosterRouter.swift; sourceTree = "<group>"; };
@@ -222,6 +231,9 @@
 				2D2C32672C26DFB700515DB8 /* Assets.xcassets */,
 				2D2C32812C26F1EE00515DB8 /* Constants.swift */,
 				2D8439072C286A3E00EBA6F5 /* Typography.swift */,
+				2DC453122C2DA82500BE2B89 /* LocalizedString.swift */,
+				2DC453142C2DA97100BE2B89 /* Localizable.strings */,
+				2DC453182C2DADB000BE2B89 /* SystemIcons.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -271,6 +283,7 @@
 				2D2C32A62C275D2300515DB8 /* ViewController.swift */,
 				2D2C32A82C275D9000515DB8 /* ViewModel.swift */,
 				2D2C329A2C2722CD00515DB8 /* Buildable.swift */,
+				2DC453102C2DA78400BE2B89 /* Localizable.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -382,6 +395,7 @@
 			knownRegions = (
 				en,
 				Base,
+				uk,
 			);
 			mainGroup = 2D2C32522C26DFB600515DB8;
 			packageReferences = (
@@ -404,6 +418,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D2C32682C26DFB700515DB8 /* Assets.xcassets in Resources */,
+				2DC453162C2DA97100BE2B89 /* Localizable.strings in Resources */,
 				2D2C326B2C26DFB700515DB8 /* Base in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -422,6 +437,7 @@
 				2D8439082C286A3E00EBA6F5 /* Typography.swift in Sources */,
 				2D2C32632C26DFB600515DB8 /* MoviesViewController.swift in Sources */,
 				2D8438EB2C2822BC00EBA6F5 /* DetailsAssembly.swift in Sources */,
+				2DC453112C2DA78400BE2B89 /* Localizable.swift in Sources */,
 				2D2C32932C2713DF00515DB8 /* MoviesService.swift in Sources */,
 				2D2C328B2C270BE000515DB8 /* MoviesEndpoint.swift in Sources */,
 				2D8438F82C28570900EBA6F5 /* UICollectionView+Extension.swift in Sources */,
@@ -434,6 +450,7 @@
 				2D8439022C2861DA00EBA6F5 /* Size.swift in Sources */,
 				2D8438F62C284F7600EBA6F5 /* UIImageView+Extension.swift in Sources */,
 				2D2C32A42C273CE300515DB8 /* UITableView+Extension.swift in Sources */,
+				2DC453132C2DA82500BE2B89 /* LocalizedString.swift in Sources */,
 				2D8439182C289DFC00EBA6F5 /* Double+Extension.swift in Sources */,
 				2D8439162C28977400EBA6F5 /* RatingView.swift in Sources */,
 				2D2C328E2C270C8000515DB8 /* Movie.swift in Sources */,
@@ -449,6 +466,7 @@
 				2D8439002C2861B800EBA6F5 /* Device.swift in Sources */,
 				2D2C32802C26F07700515DB8 /* Endpoint.swift in Sources */,
 				2D2C32A22C273BAD00515DB8 /* MovieCell.swift in Sources */,
+				2DC453192C2DADB000BE2B89 /* SystemIcons.swift in Sources */,
 				2DFDFE472C2C9F730022AA09 /* PosterRouter.swift in Sources */,
 				2D2C325F2C26DFB600515DB8 /* AppDelegate.swift in Sources */,
 				2D2C32612C26DFB600515DB8 /* SceneDelegate.swift in Sources */,
@@ -473,6 +491,15 @@
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
+		2DC453142C2DA97100BE2B89 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2DC453152C2DA97100BE2B89 /* en */,
+				2DC453172C2DA9C800BE2B89 /* uk */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -481,6 +508,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -544,6 +572,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";

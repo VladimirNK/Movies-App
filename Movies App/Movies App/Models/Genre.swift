@@ -21,7 +21,7 @@ struct Genre {
     struct Params: Encodable {
         let language: String
         
-        init(language: String = "en") {
+        init(language: String) {
             self.language = language
         }
     }

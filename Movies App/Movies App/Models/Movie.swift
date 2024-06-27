@@ -76,7 +76,7 @@ struct Movie {
         let page: Int
         let language: String
         
-        init(page: Int = 1, language: String = "en-US") {
+        init(page: Int = 1, language: String) {
             self.page = page
             self.language = language
         }

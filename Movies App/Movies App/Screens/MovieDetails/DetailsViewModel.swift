@@ -57,7 +57,7 @@ final class DetailsViewModel: ViewModel<DetailsViewModel.Input, DetailsViewModel
             guard let self else { return }
             output.send(.spinner(state: true))
             do {
-                let movieResponse = try await moviesService.getMovie(id: movieId, language: "en-US") //en-US
+                let movieResponse = try await moviesService.getMovie(id: movieId)
                 let movie = MovieItem.ViewModel(response: movieResponse)
                 output.send(.success(movie: movie))
             } catch let error as ApiError {

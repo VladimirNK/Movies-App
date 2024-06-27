@@ -29,11 +29,11 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
     
     // MARK: - Properties
     
-    var movies: [Movie.ViewModel] = []
+    private var movies: [Movie.ViewModel] = []
     var currentPage: Int = 1
-    var totalPages: Int = 0
+    var totalPages: Int = .zero
     
-    private var searchText: String = ""
+    private var searchText: String = .empty
     private var currentSortOption: SortOption = .userScore
     
     private let router: MoviesRouter
@@ -45,7 +45,7 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
         self.router = router
         self.moviesService = moviesService
         super.init()
-        setupValues()
+        checkGenres()
     }
     
     // MARK: - Transform
@@ -79,9 +79,8 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
     
     // MARK: - Private methods
     
-    private func setupValues() {
-        /// Fetch movie genres if its nil for now
-        if AppUserDefaults.genres == nil {
+    private func checkGenres() {
+        if AppUserDefaults.genres == nil || AppUserDefaults.currentLocale != Locale.current.identifier {
             fetchGenres()
         }
     }
@@ -122,7 +121,7 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
             output.send(.spinner(state: true))
             
             do {
-                let response = try await moviesService.getPopularMovies(page: page, language: "uk-UA") //en-US
+                let response = try await moviesService.getPopularMovies(page: page)
                 let moviesPage = response.results.map { Movie.ViewModel(response: $0) }
                 let uniqueMovies = moviesPage.filter { newMovie in
                     !self.movies.contains(where: { $0.id == newMovie.id })
@@ -144,7 +143,7 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
             output.send(.spinner(state: true))
             
             do {
-                let response = try await moviesService.getGenres(language: "uk")
+                let response = try await moviesService.getGenres()
                 let genreDict = response.genres.reduce(into: [Int: String]()) { dict, genre in
                     dict[genre.id] = genre.name
                 }

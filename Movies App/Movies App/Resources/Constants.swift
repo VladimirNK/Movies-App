@@ -25,4 +25,17 @@ struct Constants {
         static let authorizationKey: String = "Authorization"
         static let authorizationKeyType: String = "Bearer"
     }
+    
+    struct MoviesScreen {
+        static let movieCellHeightMultiplier: CGFloat = 0.65
+        static let paginationOffset: Int = 5
+    }
+}
+
+
+enum Locals: String {
+    case ua = "uk-UA"
+    case en
+    
+    
 }

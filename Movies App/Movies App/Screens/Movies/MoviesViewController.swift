@@ -14,7 +14,7 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
     
     private lazy var searchBar: UISearchBar = {
         let searchBar = UISearchBar()
-        searchBar.placeholder = "Search..."
+        searchBar.placeholder = LocalizedString.SearchBar.placeholder.localized
         searchBar.delegate = self
         searchBar.searchBarStyle = .default
         searchBar.tintColor = .black
@@ -24,7 +24,7 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
     private lazy var moviesCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-        layout.minimumLineSpacing = 16
+        layout.minimumLineSpacing = Space.m
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.delegate = self
@@ -34,7 +34,8 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
         collectionView.refreshControl = refreshControl
         
         collectionView.register(MovieCell.self)
-        collectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 16, right: 16)
+        let insets = UIEdgeInsets(top: .zero, left: Space.m, bottom: Space.m, right: Space.m)
+        collectionView.contentInset = insets
         return collectionView
     }()
     
@@ -52,7 +53,7 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
     
     private lazy var nothingFoundLabel: UILabel = {
         let view = UILabel()
-        view.text = "Nothing Found"
+        view.text = LocalizedString.MoviesScreen.searchNothingFound.localized
         view.font = .typography(.body)
         view.textColor = .black
         view.isHidden = true
@@ -78,12 +79,12 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
         view.backgroundColor = .white
         addViews()
         setupConstraints()
-        title = "Popular Movies"
+        title = LocalizedString.MoviesScreen.title.localized
         setupNavigationBar()
     }
     
     private func setupNavigationBar() {
-        let image = UIImage(systemName: "slider.horizontal.3")
+        let image = SystemIcons.sort.image
         let sortButton = UIBarButtonItem(
             image: image,
             style: .plain,
@@ -165,10 +166,7 @@ extension MoviesViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         let lessTotalPages = vm.currentPage < vm.totalPages
         
-        /// Movies count offset to make pagination less noticeable to the user
-        let loadingOffset = 5
-        
-        if lessTotalPages && (indexPath.row == vm.movies.count - loadingOffset) {
+        if lessTotalPages && (indexPath.row == movies.count - Constants.MoviesScreen.paginationOffset) {
             input.send(.fetchMoreMovies)
         }
         
@@ -201,7 +199,7 @@ extension MoviesViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let contentInset = collectionView.adjustedContentInset
         let cellWidth = collectionView.bounds.width - contentInset.left - contentInset.right
-        let cellHeight: CGFloat = cellWidth * 0.65
+        let cellHeight: CGFloat = cellWidth * Constants.MoviesScreen.movieCellHeightMultiplier
         
         return CGSize(width: cellWidth, height: cellHeight)
     }

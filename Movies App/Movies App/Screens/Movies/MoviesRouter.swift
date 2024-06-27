@@ -7,10 +7,21 @@
 
 import UIKit
 
-enum SortOption: String, CaseIterable {
-    case alphabet = "Alphabet"
-    case releaseDate = "Release Date"
-    case userScore = "User Score"
+enum SortOption: CaseIterable {
+    case alphabet
+    case releaseDate
+    case userScore
+    
+    var name: String {
+        switch self {
+        case .alphabet:
+            return LocalizedString.SortOptions.alphabet.localized
+        case .releaseDate:
+            return LocalizedString.SortOptions.releaseDate.localized
+        case .userScore:
+            return LocalizedString.SortOptions.userScore.localized
+        }
+    }
 }
 
 enum MoviesRoute {
@@ -48,11 +59,12 @@ final class MoviesRouterImpl: MoviesRouter {
     private func showSortActionSheet(current: SortOption, onSelect: ((SortOption) -> Void)?) {
         guard let view = view else { return }
         
-        let alert = UIAlertController(title: "Sorted By:", message: nil, preferredStyle: .actionSheet)
+        let title = LocalizedString.MoviesScreen.sortedBy.localized
+        let alert = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
         
         let actions = SortOption.allCases.map { option -> UIAlertAction in
             let action = UIAlertAction(
-                title: option.rawValue,
+                title: option.name,
                 style: .default,
                 handler: { _ in
                     onSelect?(option)
@@ -65,7 +77,8 @@ final class MoviesRouterImpl: MoviesRouter {
         
         actions.forEach { alert.addAction($0) }
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let cancelActionTitle = LocalizedString.MoviesScreen.cancel.localized
+        let cancelAction = UIAlertAction(title: cancelActionTitle, style: .cancel, handler: nil)
         alert.addAction(cancelAction)
         
         view.present(alert, animated: true, completion: nil)
@@ -74,7 +87,8 @@ final class MoviesRouterImpl: MoviesRouter {
     private func showAlert(title: String) {
         guard let view else { return }
         let alertController = UIAlertController(title: title, message: nil, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default)
+        let okTitle = LocalizedString.MoviesScreen.ok.localized
+        let okAction = UIAlertAction(title: okTitle, style: .default)
         alertController.addAction(okAction)
         view.present(alertController, animated: true, completion: nil)
     }
