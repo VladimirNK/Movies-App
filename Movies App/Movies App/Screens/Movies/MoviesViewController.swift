@@ -63,8 +63,6 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
     
     private var movies: [Movie.ViewModel] = []
     
-    
-    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -104,14 +102,14 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
     
     private func setupConstraints() {
         searchBar.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.leading.trailing.equalToSuperview().inset(Space.m)
             $0.top.equalTo(view.safeAreaLayoutGuide)
         }
         
         moviesCollectionView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalToSuperview()
-            $0.top.equalTo(searchBar.snp.bottom).offset(16)
+            $0.top.equalTo(searchBar.snp.bottom).offset(Space.m)
         }
         
         spinner.snp.makeConstraints {
@@ -142,8 +140,6 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
             .sink { [weak self] event in
                 guard let self else { return }
                 switch event {
-                case .failed(let error):
-                    print(error)
                 case .success(let movies):
                     self.movies = movies
                     moviesCollectionView.reloadData()
@@ -155,8 +151,6 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
                 }
             }.store(in: &cancellables)
     }
-    
-    
 }
 
 // MARK: - UICollectionViewDelegate
@@ -174,7 +168,6 @@ extension MoviesViewController: UICollectionViewDelegate {
         /// Movies count offset to make pagination less noticeable to the user
         let loadingOffset = 5
         
-        // TODO: - when we scroll to top we have redunant API call
         if lessTotalPages && (indexPath.row == vm.movies.count - loadingOffset) {
             input.send(.fetchMoreMovies)
         }
@@ -183,8 +176,6 @@ extension MoviesViewController: UICollectionViewDelegate {
         let radius = cell.contentView.layer.cornerRadius
         cell.layer.shadowPath = UIBezierPath(roundedRect: cell.bounds, cornerRadius: radius).cgPath
     }
-    
-    
 }
 
 // MARK: - UICollectionViewDataSource

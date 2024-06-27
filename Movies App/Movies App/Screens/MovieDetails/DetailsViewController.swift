@@ -60,6 +60,9 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
         let view = UIImageView()
         view.contentMode = .scaleAspectFill
         view.clipsToBounds = true
+        view.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(posterImageTapped))
+        view.addGestureRecognizer(tapGesture)
         return view
     }()
     
@@ -71,7 +74,6 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
         config.imagePlacement = .leading
         let view = UIButton(configuration: config)
         view.addTarget(self, action: #selector(trailerButtonDidTap), for: .touchUpInside)
-        view.isHidden = true
         return view
     }()
     
@@ -103,10 +105,6 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
         return view
     }()
     
-    
-    // MARK: - Properties
-    
-    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -116,7 +114,7 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
         input.send(.viewDidLoad)
     }
     
-    // MARK: - Methods
+    // MARK: - Setup UI
     
     private func bind() {
         let output = vm.transform(input: input.eraseToAnyPublisher())
@@ -126,8 +124,6 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
             .sink { [weak self] event in
                 guard let self else { return }
                 switch event {
-                case .failed(error: let error):
-                    break
                 case .success(movie: let movie):
                     configureContent(with: movie)
                 case .spinner(state: let loading):
@@ -181,9 +177,8 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
         movieTitle.text = movie.title
         countryLabel.text = formatCountries(from: movie, localeId: "en_US")
         genresLabel.text = movie.genres.joined(separator: ", ")
-        movieDescriptionLabel.text = movie.overview + movie.overview + movie.overview
+        movieDescriptionLabel.text = movie.overview
         ratingLabel.text = formatRating(movie.voteAverage)
-        trailerButton.isHidden = movie.video
     }
     
     private func countryName(from countryCode: String, localeId: String) -> String? {
@@ -213,5 +208,10 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
     
     @objc private func trailerButtonDidTap() {
         
+    }
+    
+    @objc private func posterImageTapped() {
+        guard let image = posterImageView.image else { return }
+        input.send(.posterDidTap(image: image))
     }
 }

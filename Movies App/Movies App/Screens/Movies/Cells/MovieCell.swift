@@ -49,8 +49,6 @@ final class MovieCell: UICollectionViewCell {
     
     private lazy var ratingView = RatingView()
     
-    
-    
     // MARK: - Init
     
     override init(frame: CGRect) {
@@ -93,7 +91,6 @@ final class MovieCell: UICollectionViewCell {
         layer.shadowRadius = CornerRadius.xs
         layer.shadowOffset = CGSize.zero
         layer.shadowColor = UIColor.black.cgColor
-        
         contentView.backgroundColor = .white
         contentView.layer.cornerRadius = CornerRadius.l
     }
@@ -134,7 +131,6 @@ final class MovieCell: UICollectionViewCell {
             $0.centerY.equalToSuperview()
             $0.trailing.equalToSuperview().inset(Space.m)
         }
-
     }
     
     private func genreNames(from indices: [Int]) -> String {
@@ -144,6 +140,4 @@ final class MovieCell: UICollectionViewCell {
         let genreNames = indices.compactMap { genreDict[$0] }
         return genreNames.joined(separator: ", ")
     }
-    
-    
 }

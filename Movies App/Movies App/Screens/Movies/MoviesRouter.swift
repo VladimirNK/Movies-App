@@ -16,6 +16,7 @@ enum SortOption: String, CaseIterable {
 enum MoviesRoute {
     case details(movieId: Int)
     case sort(current: SortOption, onSelect: ((SortOption) -> Void)?)
+    case showAlert(String)
 }
 
 protocol MoviesRouter {
@@ -32,6 +33,8 @@ final class MoviesRouterImpl: MoviesRouter {
             navigateToDetails(movieId: movieId)
         case .sort(let current, let onSelect):
             showSortActionSheet(current: current, onSelect: onSelect)
+        case .showAlert(let text):
+            showAlert(title: text)
         }
     }
     
@@ -68,5 +71,11 @@ final class MoviesRouterImpl: MoviesRouter {
         view.present(alert, animated: true, completion: nil)
     }
 
-    
+    private func showAlert(title: String) {
+        guard let view else { return }
+        let alertController = UIAlertController(title: title, message: nil, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default)
+        alertController.addAction(okAction)
+        view.present(alertController, animated: true, completion: nil)
+    }
 }

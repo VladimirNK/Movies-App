@@ -5,24 +5,22 @@
 //  Created by Vladimir Kozlov on 23.06.2024.
 //
 
-import Foundation
+import UIKit
 import Combine
 
 final class DetailsViewModel: ViewModel<DetailsViewModel.Input, DetailsViewModel.Output> {
     
     enum Input {
         case viewDidLoad
+        case posterDidTap(image: UIImage)
     }
     
     enum Output {
-        case failed(error: ApiError)
         case success(movie: MovieItem.ViewModel)
         case spinner(state: Bool)
     }
     
     // MARK: - Properties
-    
-    //private var movie: MovieItem.ViewModel?
     
     private let router: DetailsRouter
     private let moviesService: MoviesService
@@ -44,9 +42,11 @@ final class DetailsViewModel: ViewModel<DetailsViewModel.Input, DetailsViewModel
             switch event {
             case .viewDidLoad:
                 fetchMovie()
+            case .posterDidTap(let image):
+                router.navigate(to: .showPoster(image))
             }
         }.store(in: &cancellables)
-         
+        
         return output.eraseToAnyPublisher()
     }
     
@@ -61,8 +61,7 @@ final class DetailsViewModel: ViewModel<DetailsViewModel.Input, DetailsViewModel
                 let movie = MovieItem.ViewModel(response: movieResponse)
                 output.send(.success(movie: movie))
             } catch let error as ApiError {
-                print(error.message)
-                output.send(.failed(error: error))
+                router.navigate(to: .showAlert(error.message))
             }
             output.send(.spinner(state: false))
         }

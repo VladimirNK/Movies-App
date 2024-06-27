@@ -22,7 +22,6 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
     }
     
     enum Output {
-        case failed(error: ApiError)
         case success(movies: [Movie.ViewModel])
         case spinner(state: Bool)
         case endRefreshing
@@ -58,7 +57,7 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
             case .viewDidLoad:
                 fetchMovies(page: currentPage)
             case .cellDidTap(let movie):
-                navigateToDetails(movie: movie)
+                router.navigate(to: .details(movieId: movie.id))
             case .sortSelected(let sortOption):
                 currentSortOption = sortOption
                 sortMovies(by: sortOption)
@@ -71,7 +70,7 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
             case .searchBar(let searchText):
                 filterMovies(by: searchText)
             case .sortDidTap(let completion):
-                showSortSheet(selected: currentSortOption, onSelect: completion)
+                router.navigate(to: .sort(current: currentSortOption, onSelect: completion))
             }
         }.store(in: &cancellables)
          
@@ -132,7 +131,7 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
                 self.totalPages = response.totalPages
                 sortMovies(by: currentSortOption)
             } catch let error as ApiError {
-                output.send(.failed(error: error))
+                router.navigate(to: .showAlert(error.message))
             }
             output.send(.spinner(state: false))
             output.send(.endRefreshing)
@@ -151,21 +150,9 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
                 }
                 AppUserDefaults.genres = genreDict
             } catch let error as ApiError {
-                print(error)
+                router.navigate(to: .showAlert(error.message))
             }
             output.send(.spinner(state: false))
         }
-    }
-    
-   
-    
-    // MARK: - Navigation
-    
-    private func navigateToDetails(movie: Movie.ViewModel) {
-        router.navigate(to: .details(movieId: movie.id))
-    }
-    
-    private func showSortSheet(selected: SortOption, onSelect: ((SortOption) -> Void)?) {
-        router.navigate(to: .sort(current: selected, onSelect: onSelect))
     }
 }
