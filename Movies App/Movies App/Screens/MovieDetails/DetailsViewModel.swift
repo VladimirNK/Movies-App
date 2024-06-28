@@ -22,16 +22,25 @@ final class DetailsViewModel: ViewModel<DetailsViewModel.Input, DetailsViewModel
     
     // MARK: - Properties
     
+    private let movieId: Int
     private let router: DetailsRouter
     private let moviesService: MoviesService
-    private let movieId: Int
+    private let networkStatusMonitor: NetworkStatusMonitor
     
     // MARK: - Init
     
-    init(router: DetailsRouter, moviesService: MoviesService, movieId: Int) {
+    init(
+        movieId: Int,
+        router: DetailsRouter,
+        moviesService: MoviesService,
+        networkStatusMonitor: NetworkStatusMonitor
+    ) {
+        self.movieId = movieId
         self.router = router
         self.moviesService = moviesService
-        self.movieId = movieId
+        self.networkStatusMonitor = networkStatusMonitor
+        super.init()
+        subscribeToNetworkStatus()
     }
     
     // MARK: - Transform
@@ -57,7 +66,7 @@ final class DetailsViewModel: ViewModel<DetailsViewModel.Input, DetailsViewModel
             guard let self else { return }
             output.send(.spinner(state: true))
             do {
-                let movieResponse = try await moviesService.getMovie(id: movieId, language: "en-US") //en-US
+                let movieResponse = try await moviesService.getMovie(id: movieId)
                 let movie = MovieItem.ViewModel(response: movieResponse)
                 output.send(.success(movie: movie))
             } catch let error as ApiError {
@@ -65,5 +74,19 @@ final class DetailsViewModel: ViewModel<DetailsViewModel.Input, DetailsViewModel
             }
             output.send(.spinner(state: false))
         }
+    }
+    
+    private func subscribeToNetworkStatus() {
+        networkStatusMonitor.$isNetworkAvailable
+            .sink { [weak self] isAvailable in
+                guard let self else { return }
+                if !isAvailable {
+                    let message = LocalizedString.Errors.noInternet.localized
+                    router.navigate(to: .showAlert(message))
+                } else {
+                    fetchMovie()
+                }
+            }
+            .store(in: &cancellables)
     }
 }

@@ -39,7 +39,7 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
         let view = UILabel()
         view.font = .typography(.body)
         view.textColor = .black
-        view.numberOfLines = 0
+        view.numberOfLines = .zero
         return view
     }()
     
@@ -68,8 +68,8 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
     
     private lazy var trailerButton: UIButton = {
         var config = UIButton.Configuration.filled()
-        config.image = UIImage(systemName: "play.rectangle")
-        config.title = "Play Trailer"
+        config.image = SystemIcons.play.image
+        config.title = LocalizedString.MovieDetailsScreen.playTrailer.localized
         config.imagePadding = Space.xs
         config.imagePlacement = .leading
         let view = UIButton(configuration: config)
@@ -100,10 +100,7 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
         return view
     }()
     
-    private lazy var contentView: UIView = {
-        let view = UIView()
-        return view
-    }()
+    private lazy var contentView = UIView()
     
     // MARK: - Lifecycle
     
@@ -114,7 +111,7 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
         input.send(.viewDidLoad)
     }
     
-    // MARK: - Setup UI
+    // MARK: - Bind ViewModel
     
     private func bind() {
         let output = vm.transform(input: input.eraseToAnyPublisher())
@@ -131,6 +128,8 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
                 }
             }.store(in: &cancellables)
     }
+    
+    // MARK: - Setup UI
     
     private func setupUI() {
         view.backgroundColor = .white
@@ -171,18 +170,23 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
         }
     }
     
+    // MARK: - Configure dcreen data
+    
     private func configureContent(with movie: MovieItem.ViewModel) {
         self.title = movie.title
         posterImageView.loadImage(from: movie.posterPath)
         movieTitle.text = movie.title
-        countryLabel.text = formatCountries(from: movie, localeId: "en_US")
+        countryLabel.text = formatCountries(from: movie, localeId: .localeIdentifier)
         genresLabel.text = movie.genres.joined(separator: ", ")
         movieDescriptionLabel.text = movie.overview
         ratingLabel.text = formatRating(movie.voteAverage)
+        trailerButton.isHidden = movie.video
     }
     
+    // MARK: - Format strings
+    
     private func countryName(from countryCode: String, localeId: String) -> String? {
-        let locale = Locale(identifier: localeId) // "en_US"
+        let locale = Locale(identifier: localeId)
         return locale.localizedString(forRegionCode: countryCode)
     }
     
@@ -195,16 +199,19 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
     
     private func formatGenres(from indices: [Int]) -> String {
         guard let genreDict = AppUserDefaults.genres else {
-            return ""
+            return .empty
         }
         let genreNames = indices.compactMap { genreDict[$0] }
         return genreNames.joined(separator: ", ")
     }
     
     private func formatRating(_ value: Double) -> String {
-        let ratingString  = String(format: "%.1f", value)
-        return "User Score: \(ratingString)"
+        let ratingString = String(format: "%.1f", value)
+        let key = LocalizedString.MovieDetailsScreen.rating.localized
+        return "\(key): \(ratingString)"
     }
+    
+    // MARK: - Actions
     
     @objc private func trailerButtonDidTap() {
         

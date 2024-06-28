@@ -1,0 +1,26 @@
+/* 
+  Localizable.strings
+  Movies App
+
+  Created by Vladimir Kozlov on 27.06.2024.
+  
+*/
+
+//MARK: - Movies Screen
+
+"screen_title" = "Popular Movies";
+"searchbar_placeholder" = "Search...";
+"search_nothing_found" = "Nothing Found";
+"sorted_by" = "Sorted by:";
+"cancel" = "Cancel";
+"ok" = "OK";
+"no_internet_message" = "You are offline. Please, enable your Wi-Fi or connect using cellular data.";
+
+"alphabet_sorted" = "Alphabet";
+"release_date_sorted" = "Release Date";
+"user_score_sorted" = "User Score";
+
+//MARK: - Movie Details Screen
+
+"play_trailer" = "Play trailer";
+"rating" = "Rating";

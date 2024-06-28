@@ -11,7 +11,7 @@ struct AppUserDefaults {
     
     enum Keys: String, CaseIterable {
         case genres
-        
+        case currentLocale
     }
     
     static func removeValue(_ item: AppUserDefaults.Keys) {
@@ -33,4 +33,7 @@ struct AppUserDefaults {
     
     @ObjectStorage(key: .genres, defaultValue: nil)
     static var genres: [Int: String]?
+    
+    @Storage(key: .currentLocale, defaultValue: .empty)
+    static var currentLocale: String
 }

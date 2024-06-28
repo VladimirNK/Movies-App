@@ -14,7 +14,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        
         window = UIWindow(windowScene: windowScene)
         
         let moviesViewController = MoviesAssembly().assemble()
@@ -36,8 +35,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
+        AppUserDefaults.currentLocale = Locale.current.identifier
         // Called when the scene will move from an active state to an inactive state.
         // This may occur due to temporary interruptions (ex. an incoming phone call).
+        
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {

@@ -123,7 +123,7 @@ struct MovieItem {
     struct Params: Encodable {
         let language: String
         
-        init(language: String = "en-US") {
+        init(language: String) {
             self.language = language
         }
     }

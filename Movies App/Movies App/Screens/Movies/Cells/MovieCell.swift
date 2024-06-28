@@ -42,7 +42,10 @@ final class MovieCell: UICollectionViewCell {
     
     private lazy var gradientLayer: CAGradientLayer = {
         let gradientLayer = CAGradientLayer()
-        gradientLayer.colors = [UIColor.black.withAlphaComponent(0.8).cgColor, UIColor.clear.cgColor]
+        gradientLayer.colors = [
+            UIColor.black.withAlphaComponent(0.8).cgColor,
+            UIColor.clear.cgColor
+        ]
         gradientLayer.locations = [0.0, 1.0]
         return gradientLayer
     }()
@@ -71,18 +74,7 @@ final class MovieCell: UICollectionViewCell {
         )
     }
     
-    // MARK: - Methods
-    
-    public func configure(with model: Movie.ViewModel) {
-        movieTitle.text = model.title
-        posterImageView.loadImage(from: model.posterPath)
-        releaseDateLabel.text = model.releaseDate.yearAsString()
-        genresLabel.text = genreNames(from: model.genreIDS)
-        let roundedRating = model.voteAverage.roundedToWholeNumber()
-        ratingView.setProgress(to: roundedRating)
-    }
-    
-    // MARK: - Private methods
+    // MARK: - Setup UI
     
     private func setupUI() {
         backgroundColor = .clear
@@ -133,11 +125,24 @@ final class MovieCell: UICollectionViewCell {
         }
     }
     
+    // MARK: - Formatters
+    
     private func genreNames(from indices: [Int]) -> String {
         guard let genreDict = AppUserDefaults.genres else {
-            return ""
+            return .empty
         }
         let genreNames = indices.compactMap { genreDict[$0] }
         return genreNames.joined(separator: ", ")
+    }
+    
+    // MARK: - Configure cell
+    
+    public func configure(with model: Movie.ViewModel) {
+        movieTitle.text = model.title
+        posterImageView.loadImage(from: model.posterPath)
+        releaseDateLabel.text = model.releaseDate.yearAsString()
+        genresLabel.text = genreNames(from: model.genreIDS)
+        let roundedRating = model.voteAverage.roundedToWholeNumber()
+        ratingView.setProgress(to: roundedRating)
     }
 }
