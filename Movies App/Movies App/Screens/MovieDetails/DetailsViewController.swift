@@ -125,6 +125,8 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
                     configureContent(with: movie)
                 case .spinner(state: let loading):
                     loading ? spinner.startAnimating() : spinner.stopAnimating()
+                case .didFetchTrailer:
+                    trailerButton.isHidden = false
                 }
             }.store(in: &cancellables)
     }
@@ -180,7 +182,6 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
         genresLabel.text = movie.genres.joined(separator: ", ")
         movieDescriptionLabel.text = movie.overview
         ratingLabel.text = formatRating(movie.voteAverage)
-        trailerButton.isHidden = movie.video
     }
     
     // MARK: - Format strings
@@ -214,7 +215,7 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
     // MARK: - Actions
     
     @objc private func trailerButtonDidTap() {
-        
+        input.send(.showTrailerDidTap)
     }
     
     @objc private func posterImageTapped() {

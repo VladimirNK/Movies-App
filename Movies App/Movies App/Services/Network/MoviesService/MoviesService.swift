@@ -11,6 +11,7 @@ protocol MoviesService {
     func getPopularMovies(page: Int) async throws -> Movie.Response
     func getGenres() async throws -> Genre.Response
     func getMovie(id: Int) async throws -> MovieItem.Response
+    func getTrailer(id: Int) async throws -> Video.Response
 }
 
 struct MoviesServiceImpl: ApiClient, MoviesService {
@@ -34,4 +35,9 @@ struct MoviesServiceImpl: ApiClient, MoviesService {
         return try await sendRequest(endpoint: endpoint)
     }
     
+    func getTrailer(id: Int) async throws -> Video.Response {
+        let params = Video.Params(language: .localeIdentifier)
+        let endpoint = MoviesEndpoint.getTrailer(id: id, params: params)
+        return try await sendRequest(endpoint: endpoint)
+    }
 }

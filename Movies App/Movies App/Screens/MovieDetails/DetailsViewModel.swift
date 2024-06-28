@@ -13,11 +13,13 @@ final class DetailsViewModel: ViewModel<DetailsViewModel.Input, DetailsViewModel
     enum Input {
         case viewDidLoad
         case posterDidTap(image: UIImage)
+        case showTrailerDidTap
     }
     
     enum Output {
         case success(movie: MovieItem.ViewModel)
         case spinner(state: Bool)
+        case didFetchTrailer
     }
     
     // MARK: - Properties
@@ -26,6 +28,7 @@ final class DetailsViewModel: ViewModel<DetailsViewModel.Input, DetailsViewModel
     private let router: DetailsRouter
     private let moviesService: MoviesService
     private let networkStatusMonitor: NetworkStatusMonitor
+    private var trailerKey: String?
     
     // MARK: - Init
     
@@ -51,8 +54,13 @@ final class DetailsViewModel: ViewModel<DetailsViewModel.Input, DetailsViewModel
             switch event {
             case .viewDidLoad:
                 fetchMovie()
+                fetchTrailer(id: movieId)
             case .posterDidTap(let image):
                 router.navigate(to: .showPoster(image))
+            case .showTrailerDidTap:
+                if let trailerKey {
+                    router.navigate(to: .showTrailer(key: trailerKey))
+                }
             }
         }.store(in: &cancellables)
         
@@ -69,6 +77,22 @@ final class DetailsViewModel: ViewModel<DetailsViewModel.Input, DetailsViewModel
                 let movieResponse = try await moviesService.getMovie(id: movieId)
                 let movie = MovieItem.ViewModel(response: movieResponse)
                 output.send(.success(movie: movie))
+            } catch let error as ApiError {
+                router.navigate(to: .showAlert(error.message))
+            }
+            output.send(.spinner(state: false))
+        }
+    }
+    
+    private func fetchTrailer(id: Int) {
+        Task { [weak self] in
+            guard let self else { return }
+            output.send(.spinner(state: true))
+            do {
+                let response = try await moviesService.getTrailer(id: movieId)
+                let trailer = Video.ViewModel(response: response)
+                self.trailerKey = trailer?.key
+                output.send(.didFetchTrailer)
             } catch let error as ApiError {
                 router.navigate(to: .showAlert(error.message))
             }

@@ -30,12 +30,9 @@ struct Constants {
         static let movieCellHeightMultiplier: CGFloat = 0.65
         static let paginationOffset: Int = 5
     }
+    
+    struct VideoPlayer {
+        static let playerHeight: CGFloat = 300
+    }
 }
 
-
-enum Locals: String {
-    case ua = "uk-UA"
-    case en
-    
-    
-}
