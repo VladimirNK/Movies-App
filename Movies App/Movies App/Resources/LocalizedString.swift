@@ -37,5 +37,11 @@ enum LocalizedString {
         case playTrailer = "play_trailer"
         case rating = "rating"
     }
+    
+    //MARK: - Errors
+    
+    enum Errors: String, Localizable {
+        case noInternet = "no_internet_message"
+    }
 }
 

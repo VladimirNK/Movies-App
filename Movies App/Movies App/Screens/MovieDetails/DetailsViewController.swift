@@ -180,6 +180,7 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
         genresLabel.text = movie.genres.joined(separator: ", ")
         movieDescriptionLabel.text = movie.overview
         ratingLabel.text = formatRating(movie.voteAverage)
+        trailerButton.isHidden = movie.video
     }
     
     // MARK: - Format strings

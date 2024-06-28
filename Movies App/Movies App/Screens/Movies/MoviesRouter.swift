@@ -37,6 +37,7 @@ protocol MoviesRouter {
 final class MoviesRouterImpl: MoviesRouter {
     
     weak var view: UIViewController?
+    private var currentAlertController: UIAlertController?
     
     func navigate(to route: MoviesRoute) {
         switch route {

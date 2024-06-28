@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2D2A63772C2DFE9E00EC2386 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2A63762C2DFE9E00EC2386 /* NetworkMonitor.swift */; };
 		2D2C325F2C26DFB600515DB8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2C325E2C26DFB600515DB8 /* AppDelegate.swift */; };
 		2D2C32612C26DFB600515DB8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2C32602C26DFB600515DB8 /* SceneDelegate.swift */; };
 		2D2C32632C26DFB600515DB8 /* MoviesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2C32622C26DFB600515DB8 /* MoviesViewController.swift */; };
@@ -65,6 +66,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2D2A63762C2DFE9E00EC2386 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		2D2C325B2C26DFB600515DB8 /* Movies App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Movies App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D2C325E2C26DFB600515DB8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2D2C32602C26DFB600515DB8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -136,6 +138,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2D2A63752C2DFE8800EC2386 /* NetworkMonitor */ = {
+			isa = PBXGroup;
+			children = (
+				2D2A63762C2DFE9E00EC2386 /* NetworkMonitor.swift */,
+			);
+			path = NetworkMonitor;
+			sourceTree = "<group>";
+		};
 		2D2C32522C26DFB600515DB8 = {
 			isa = PBXGroup;
 			children = (
@@ -169,6 +179,7 @@
 		2D2C32772C26E47100515DB8 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				2D2A63752C2DFE8800EC2386 /* NetworkMonitor */,
 				2D84390F2C2883AA00EBA6F5 /* UserDefaults */,
 				2D2C327E2C26E59100515DB8 /* Network */,
 			);
@@ -431,6 +442,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D2C32822C26F1EE00515DB8 /* Constants.swift in Sources */,
+				2D2A63772C2DFE9E00EC2386 /* NetworkMonitor.swift in Sources */,
 				2DFDFE432C2C9EAF0022AA09 /* PosterViewController.swift in Sources */,
 				2D84390A2C286F3500EBA6F5 /* String+Extension.swift in Sources */,
 				2D8438E42C281EEB00EBA6F5 /* MoviesRouter.swift in Sources */,

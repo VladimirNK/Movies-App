@@ -38,14 +38,21 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
     
     private let router: MoviesRouter
     private let moviesService: MoviesService
+    private let networkStatusMonitor: NetworkStatusMonitor
     
     // MARK: - Init
     
-    init(router: MoviesRouter, moviesService: MoviesService) {
+    init(
+        router: MoviesRouter,
+        moviesService: MoviesService,
+        networkStatusMonitor: NetworkStatusMonitor
+    ) {
         self.router = router
         self.moviesService = moviesService
+        self.networkStatusMonitor = networkStatusMonitor
         super.init()
         checkGenres()
+        subscribeToNetworkStatus()
     }
     
     // MARK: - Transform
@@ -83,6 +90,18 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
         if AppUserDefaults.genres == nil || AppUserDefaults.currentLocale != Locale.current.identifier {
             fetchGenres()
         }
+    }
+    
+    private func subscribeToNetworkStatus() {
+        networkStatusMonitor.$isNetworkAvailable
+            .sink { [weak self] isAvailable in
+                guard let self else { return }
+                if !isAvailable {
+                    let message = LocalizedString.Errors.noInternet.localized
+                    router.navigate(to: .showAlert(message))
+                }
+            }
+            .store(in: &cancellables)
     }
     
     private func sortMovies(by sortOption: SortOption) {

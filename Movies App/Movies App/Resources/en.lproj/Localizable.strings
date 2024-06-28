@@ -14,6 +14,7 @@
 "sorted_by" = "Sorted by:";
 "cancel" = "Cancel";
 "ok" = "OK";
+"no_internet_message" = "You are offline. Please, enable your Wi-Fi or connect using cellular data.";
 
 "alphabet_sorted" = "Alphabet";
 "release_date_sorted" = "Release Date";

@@ -12,7 +12,12 @@ final class MoviesAssembly {
     func assemble() -> UIViewController {
         let router = MoviesRouterImpl()
         let moviesService = MoviesServiceImpl()
-        let viewModel = MoviesViewModel(router: router, moviesService: moviesService)
+        let networkStatusMonitor = NetworkStatusMonitor()
+        let viewModel = MoviesViewModel(
+            router: router,
+            moviesService: moviesService,
+            networkStatusMonitor: networkStatusMonitor
+        )
         let viewController = MoviesViewController(viewModel: viewModel)
         router.view = viewController
         return viewController
