@@ -11,6 +11,7 @@ enum DetailsRoute {
     case pop
     case showPoster(UIImage)
     case showAlert(String)
+    case showTrailer(key: String)
 }
 
 protocol DetailsRouter {
@@ -29,6 +30,8 @@ final class DetailsRouterImpl: DetailsRouter {
             showPoster(image)
         case .showAlert(let text):
             showAlert(title: text)
+        case .showTrailer(key: let key):
+            showTrailer(key: key)
         }
     }
     
@@ -50,5 +53,12 @@ final class DetailsRouterImpl: DetailsRouter {
         let okAction = UIAlertAction(title: "OK", style: .default)
         alertController.addAction(okAction)
         view.present(alertController, animated: true, completion: nil)
+    }
+    
+    private func showTrailer(key: String) {
+        guard let view else { return }
+        let trailerVC = PlayerAsembly(key: key).assemble()
+        trailerVC.modalPresentationStyle = .automatic
+        view.present(trailerVC, animated: true)
     }
 }

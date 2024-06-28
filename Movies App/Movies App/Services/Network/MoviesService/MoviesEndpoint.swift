@@ -11,6 +11,7 @@ enum MoviesEndpoint {
     case popularMovies(params: Movie.Params)
     case getGenres(params: Genre.Params)
     case getMovie(id: Int, params: MovieItem.Params)
+    case getTrailer(id: Int, params: Video.Params)
 }
 
 extension MoviesEndpoint: Endpoint {
@@ -22,6 +23,8 @@ extension MoviesEndpoint: Endpoint {
             return "/3/genre/movie/list"
         case .getMovie(let id, _):
             return "/3/movie/\(id)"
+        case .getTrailer(let id, _):
+            return "/3/movie/\(id)/videos"
         }
     }
     
@@ -36,6 +39,8 @@ extension MoviesEndpoint: Endpoint {
         case .getGenres(let params):
             return params.toQueryItems
         case .getMovie(_, params: let params):
+            return params.toQueryItems
+        case .getTrailer(_, params: let params):
             return params.toQueryItems
         }
     }

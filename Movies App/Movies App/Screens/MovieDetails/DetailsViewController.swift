@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import YouTubeiOSPlayerHelper
 
 final class DetailsViewController: ViewController<DetailsViewModel> {
     
@@ -103,13 +102,6 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
     
     private lazy var contentView = UIView()
     
-    private lazy var playerView: YTPlayerView = {
-       let view = YTPlayerView()
-        
-        return view
-    }()
-    
-    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -117,8 +109,6 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
         setupUI()
         bind()
         input.send(.viewDidLoad)
-        
-        playerView.load(withVideoId: <#T##String#>)
     }
     
     // MARK: - Bind ViewModel
@@ -135,6 +125,8 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
                     configureContent(with: movie)
                 case .spinner(state: let loading):
                     loading ? spinner.startAnimating() : spinner.stopAnimating()
+                case .didFetchTrailer:
+                    trailerButton.isHidden = false
                 }
             }.store(in: &cancellables)
     }
@@ -152,7 +144,6 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
         scrollView.addSubview(contentView)
         contentView.addSubview(posterImageView)
         contentView.addSubview(descriptionStack)
-        
     }
     
     private func setupConstraints() {
@@ -179,8 +170,6 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
             $0.top.equalTo(posterImageView.snp.bottom).offset(Space.xs)
             $0.bottom.equalToSuperview().inset(Space.m)
         }
-        
-        
     }
     
     // MARK: - Configure dcreen data
@@ -193,7 +182,6 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
         genresLabel.text = movie.genres.joined(separator: ", ")
         movieDescriptionLabel.text = movie.overview
         ratingLabel.text = formatRating(movie.voteAverage)
-        trailerButton.isHidden = movie.video
     }
     
     // MARK: - Format strings
@@ -227,7 +215,7 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
     // MARK: - Actions
     
     @objc private func trailerButtonDidTap() {
-        
+        input.send(.showTrailerDidTap)
     }
     
     @objc private func posterImageTapped() {
