@@ -25,6 +25,7 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
         case success(movies: [Movie.ViewModel])
         case spinner(state: Bool)
         case endRefreshing
+        case didSorted(movies: [Movie.ViewModel])
     }
     
     // MARK: - Properties
@@ -115,7 +116,7 @@ final class MoviesViewModel: ViewModel<MoviesViewModel.Input, MoviesViewModel.Ou
         case .userScore:
             sortedMovies = movies.sorted(by: { $0.voteAverage > $1.voteAverage })
         }
-        output.send(.success(movies: sortedMovies))
+        output.send(.didSorted(movies: sortedMovies))
     }
     
     private func clearCache() {

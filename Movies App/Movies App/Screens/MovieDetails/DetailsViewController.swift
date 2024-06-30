@@ -61,6 +61,7 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
         config.imagePlacement = .leading
         $0 = UIButton(configuration: config)
         $0.addTarget(self, action: #selector(trailerButtonDidTap), for: .touchUpInside)
+        $0.isHidden = true
     }
     
     private lazy var descriptionStack: UIStackView = .build {
@@ -108,8 +109,8 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
                     configureContent(with: movie)
                 case .spinner(state: let loading):
                     loading ? spinner.startAnimating() : spinner.stopAnimating()
-                case .didFetchTrailer:
-                    trailerButton.isHidden = false
+                case .didFetchTrailer(let hasTrailer):
+                    trailerButton.isHidden = !hasTrailer
                 }
             }.store(in: &cancellables)
     }

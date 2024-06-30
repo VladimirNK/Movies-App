@@ -65,7 +65,29 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
         input.send(.viewDidLoad)
     }
     
-    // MARK: - Methods
+    // MARK: - Bind ViewModel
+    
+    private func bind() {
+        let output = vm.transform(input: input.eraseToAnyPublisher())
+        
+        output
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] event in
+                guard let self else { return }
+                switch event {
+                case .success(let movies):
+                    handleDidSuccess(with: movies)
+                case .spinner(state: let loading):
+                    loading ? spinner.startAnimating() : spinner.stopAnimating()
+                case .endRefreshing:
+                    refreshControl.endRefreshing()
+                case .didSorted(movies: let movies):
+                    handleDidSort(with: movies)
+                }
+            }.store(in: &cancellables)
+    }
+    
+    // MARK: - Setup UI
     
     private func setupUI() {
         view.backgroundColor = .white
@@ -114,6 +136,8 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
         }
     }
     
+    //MARK: - Actions
+    
     @objc func didPullToRefresh() {
         input.send(.didPullToRefresh)
     }
@@ -125,24 +149,17 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
         }) )
     }
     
-    private func bind() {
-        let output = vm.transform(input: input.eraseToAnyPublisher())
-        
-        output
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] event in
-                guard let self else { return }
-                switch event {
-                case .success(let movies):
-                    self.movies = movies
-                    moviesCollectionView.reloadData()
-                    nothingFoundLabel.isHidden = !movies.isEmpty
-                case .spinner(state: let loading):
-                    loading ? spinner.startAnimating() : spinner.stopAnimating()
-                case .endRefreshing:
-                    refreshControl.endRefreshing()
-                }
-            }.store(in: &cancellables)
+    private func handleDidSuccess(with movies: [Movie.ViewModel]) {
+        self.movies = movies
+        moviesCollectionView.reloadData()
+        nothingFoundLabel.isHidden = !movies.isEmpty
+    }
+    
+    private func handleDidSort(with movies: [Movie.ViewModel]) {
+        self.movies = movies
+        moviesCollectionView.reloadData()
+        let firstIndexPath = IndexPath(item: 0, section: 0)
+        moviesCollectionView.scrollToItem(at: firstIndexPath, at: .top, animated: true)
     }
 }
 
