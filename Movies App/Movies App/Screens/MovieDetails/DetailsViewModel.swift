@@ -19,7 +19,7 @@ final class DetailsViewModel: ViewModel<DetailsViewModel.Input, DetailsViewModel
     enum Output {
         case success(movie: MovieItem.ViewModel)
         case spinner(state: Bool)
-        case didFetchTrailer
+        case didFetchTrailer(state: Bool)
     }
     
     // MARK: - Properties
@@ -92,7 +92,7 @@ final class DetailsViewModel: ViewModel<DetailsViewModel.Input, DetailsViewModel
                 let response = try await moviesService.getTrailer(id: movieId)
                 let trailer = Video.ViewModel(response: response)
                 self.trailerKey = trailer?.key
-                output.send(.didFetchTrailer)
+                output.send(.didFetchTrailer(state: trailerKey != nil))
             } catch let error as ApiError {
                 router.navigate(to: .showAlert(error.message))
             }

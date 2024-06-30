@@ -49,10 +49,12 @@ final class DetailsRouterImpl: DetailsRouter {
     
     private func showAlert(title: String) {
         guard let view else { return }
-        let alertController = UIAlertController(title: title, message: nil, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default)
-        alertController.addAction(okAction)
-        view.present(alertController, animated: true, completion: nil)
+        Task { @MainActor in
+            let alertController = UIAlertController(title: title, message: nil, preferredStyle: .alert)
+            let okAction = UIAlertAction(title: LocalizedString.MoviesScreen.ok.localized, style: .default)
+            alertController.addAction(okAction)
+            view.present(alertController, animated: true, completion: nil)
+        }
     }
     
     private func showTrailer(key: String) {
