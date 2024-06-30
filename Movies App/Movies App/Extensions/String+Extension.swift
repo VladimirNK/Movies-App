@@ -11,6 +11,8 @@ extension String {
     
     static let empty = ""
     
+    static let commaSeparator = ", "
+    
     ///Convert String to Date
     func toDate(withFormat format: String = "yyyy-MM-dd") -> Date {
         let dateFormatter = DateFormatter()

@@ -40,15 +40,13 @@ final class MovieCell: UICollectionViewCell {
         $0.numberOfLines = 2
     }
     
-    private lazy var gradientLayer: CAGradientLayer = {
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.colors = [
+    private lazy var gradientLayer: CAGradientLayer = .build {
+        $0.colors = [
             UIColor.black.withAlphaComponent(0.8).cgColor,
             UIColor.clear.cgColor
         ]
-        gradientLayer.locations = [0.0, 1.0]
-        return gradientLayer
-    }()
+        $0.locations = [0.0, 1.0]
+    }
     
     private lazy var ratingView = RatingView()
     
@@ -132,7 +130,7 @@ final class MovieCell: UICollectionViewCell {
             return .empty
         }
         let genreNames = indices.compactMap { genreDict[$0] }
-        return genreNames.joined(separator: ", ")
+        return genreNames.joined(separator: .commaSeparator)
     }
     
     // MARK: - Configure cell

@@ -20,8 +20,12 @@ protocol ViewModelProtocol {
 
 class ViewModel<Input, Output>: ViewModelProtocol {
     
+    // MARK: - Properties
+    
     var output: PassthroughSubject<Output, Never> = .init()
     var cancellables: Set<AnyCancellable> = []
+    
+    // MARK: - Methods
     
     func transform(input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
         fatalError("transform(input:) must be overridden")

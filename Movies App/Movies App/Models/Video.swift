@@ -9,10 +9,14 @@ import Foundation
 
 struct Video {
     
+    //MARK: - Response
+    
     struct Response: Decodable {
         let id: Int
         let results: [Item]
     }
+    
+    //MARK: - Item
 
     struct Item: Decodable {
         let iso639_1: String?
@@ -35,6 +39,8 @@ struct Video {
         }
     }
     
+    //MARK: - ViewModel
+    
     struct ViewModel {
         let key: String
         
@@ -45,6 +51,8 @@ struct Video {
             self.key = item.key
         }
     }
+    
+    //MARK: - Query Items Parameters
     
     struct Params: Encodable {
         let language: String

@@ -46,9 +46,7 @@
 		2D8438F22C28309C00EBA6F5 /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2D8438F12C28309C00EBA6F5 /* SDWebImageMapKit */; };
 		2D8438F62C284F7600EBA6F5 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8438F52C284F7600EBA6F5 /* UIImageView+Extension.swift */; };
 		2D8438F82C28570900EBA6F5 /* UICollectionView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8438F72C28570900EBA6F5 /* UICollectionView+Extension.swift */; };
-		2D8438FB2C28617000EBA6F5 /* DeviceKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2D8438FA2C28617000EBA6F5 /* DeviceKit */; };
 		2D8438FE2C2861A000EBA6F5 /* CornerRadius.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8438FD2C2861A000EBA6F5 /* CornerRadius.swift */; };
-		2D8439002C2861B800EBA6F5 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8438FF2C2861B800EBA6F5 /* Device.swift */; };
 		2D8439022C2861DA00EBA6F5 /* Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8439012C2861DA00EBA6F5 /* Size.swift */; };
 		2D8439042C2861F600EBA6F5 /* Space.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8439032C2861F600EBA6F5 /* Space.swift */; };
 		2D8439062C28622F00EBA6F5 /* CGSize+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8439052C28622F00EBA6F5 /* CGSize+Extension.swift */; };
@@ -108,7 +106,6 @@
 		2D8438F52C284F7600EBA6F5 /* UIImageView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
 		2D8438F72C28570900EBA6F5 /* UICollectionView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Extension.swift"; sourceTree = "<group>"; };
 		2D8438FD2C2861A000EBA6F5 /* CornerRadius.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CornerRadius.swift; sourceTree = "<group>"; };
-		2D8438FF2C2861B800EBA6F5 /* Device.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		2D8439012C2861DA00EBA6F5 /* Size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Size.swift; sourceTree = "<group>"; };
 		2D8439032C2861F600EBA6F5 /* Space.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Space.swift; sourceTree = "<group>"; };
 		2D8439052C28622F00EBA6F5 /* CGSize+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGSize+Extension.swift"; sourceTree = "<group>"; };
@@ -137,7 +134,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D8438F02C28309C00EBA6F5 /* SDWebImage in Frameworks */,
-				2D8438FB2C28617000EBA6F5 /* DeviceKit in Frameworks */,
 				2D2C32962C271B2700515DB8 /* SnapKit in Frameworks */,
 				2D8438F22C28309C00EBA6F5 /* SDWebImageMapKit in Frameworks */,
 				2D2C32982C271B2700515DB8 /* SnapKit-Dynamic in Frameworks */,
@@ -344,7 +340,6 @@
 			isa = PBXGroup;
 			children = (
 				2D8438FD2C2861A000EBA6F5 /* CornerRadius.swift */,
-				2D8438FF2C2861B800EBA6F5 /* Device.swift */,
 				2D8439012C2861DA00EBA6F5 /* Size.swift */,
 				2D8439032C2861F600EBA6F5 /* Space.swift */,
 			);
@@ -400,7 +395,6 @@
 				2D2C32972C271B2700515DB8 /* SnapKit-Dynamic */,
 				2D8438EF2C28309C00EBA6F5 /* SDWebImage */,
 				2D8438F12C28309C00EBA6F5 /* SDWebImageMapKit */,
-				2D8438FA2C28617000EBA6F5 /* DeviceKit */,
 				2D2A63822C2EAECA00EC2386 /* YouTubeiOSPlayerHelper */,
 			);
 			productName = "Movies App";
@@ -435,7 +429,6 @@
 			packageReferences = (
 				2D2C32942C271B2700515DB8 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				2D8438EE2C28309C00EBA6F5 /* XCRemoteSwiftPackageReference "SDWebImage" */,
-				2D8438F92C28617000EBA6F5 /* XCRemoteSwiftPackageReference "DeviceKit" */,
 				2D2A63812C2EAECA00EC2386 /* XCRemoteSwiftPackageReference "youtube-ios-player-helper" */,
 			);
 			productRefGroup = 2D2C325C2C26DFB600515DB8 /* Products */;
@@ -502,7 +495,6 @@
 				2D2C32A92C275D9000515DB8 /* ViewModel.swift in Sources */,
 				2D2A638E2C2EBF8B00EC2386 /* PlayerAsembly.swift in Sources */,
 				2D8439042C2861F600EBA6F5 /* Space.swift in Sources */,
-				2D8439002C2861B800EBA6F5 /* Device.swift in Sources */,
 				2D2C32802C26F07700515DB8 /* Endpoint.swift in Sources */,
 				2D2C32A22C273BAD00515DB8 /* MovieCell.swift in Sources */,
 				2DC453192C2DADB000BE2B89 /* SystemIcons.swift in Sources */,
@@ -671,13 +663,12 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = YBY6289279;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Movies App/App/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -699,13 +690,12 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = YBY6289279;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Movies App/App/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -768,14 +758,6 @@
 				minimumVersion = 5.19.3;
 			};
 		};
-		2D8438F92C28617000EBA6F5 /* XCRemoteSwiftPackageReference "DeviceKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/devicekit/DeviceKit.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.4.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -803,11 +785,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2D8438EE2C28309C00EBA6F5 /* XCRemoteSwiftPackageReference "SDWebImage" */;
 			productName = SDWebImageMapKit;
-		};
-		2D8438FA2C28617000EBA6F5 /* DeviceKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2D8438F92C28617000EBA6F5 /* XCRemoteSwiftPackageReference "DeviceKit" */;
-			productName = DeviceKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

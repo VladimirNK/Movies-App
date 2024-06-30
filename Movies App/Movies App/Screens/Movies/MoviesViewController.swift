@@ -12,53 +12,45 @@ final class MoviesViewController: ViewController<MoviesViewModel> {
     
     // MARK: - UI Elements
     
-    private lazy var searchBar: UISearchBar = {
-        let searchBar = UISearchBar()
-        searchBar.placeholder = LocalizedString.SearchBar.placeholder.localized
-        searchBar.delegate = self
-        searchBar.searchBarStyle = .default
-        searchBar.tintColor = .black
-        return searchBar
-    }()
+    private lazy var searchBar: UISearchBar = .build {
+        $0.placeholder = LocalizedString.SearchBar.placeholder.localized
+        $0.delegate = self
+        $0.searchBarStyle = .default
+        $0.tintColor = .black
+    }
     
     private lazy var moviesCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = Space.m
         
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.showsVerticalScrollIndicator = false
-        collectionView.alwaysBounceVertical = true
-        collectionView.refreshControl = refreshControl
-        
-        collectionView.register(MovieCell.self)
+        let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        view.delegate = self
+        view.dataSource = self
+        view.showsVerticalScrollIndicator = false
+        view.alwaysBounceVertical = true
+        view.refreshControl = refreshControl
+        view.register(MovieCell.self)
         let insets = UIEdgeInsets(top: .zero, left: Space.m, bottom: Space.m, right: Space.m)
-        collectionView.contentInset = insets
-        return collectionView
-    }()
-    
-    private lazy var refreshControl: UIRefreshControl = {
-        let view = UIRefreshControl()
-        view.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
+        view.contentInset = insets
         return view
     }()
     
-    private lazy var spinner: UIActivityIndicatorView = {
-        let view = UIActivityIndicatorView(style: .large)
-        view.color = .black
-        return view
-    }()
+    private lazy var refreshControl: UIRefreshControl = .build {
+        $0.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
+    }
     
-    private lazy var nothingFoundLabel: UILabel = {
-        let view = UILabel()
-        view.text = LocalizedString.MoviesScreen.searchNothingFound.localized
-        view.font = .typography(.body)
-        view.textColor = .black
-        view.isHidden = true
-        return view
-    }()
+    private lazy var spinner: UIActivityIndicatorView = .build {
+        $0 = UIActivityIndicatorView(style: .large)
+        $0.color = .black
+    }
+    
+    private lazy var nothingFoundLabel: UILabel = .build {
+        $0.text = LocalizedString.MoviesScreen.searchNothingFound.localized
+        $0.font = .typography(.body)
+        $0.textColor = .black
+        $0.isHidden = true
+    }
     
     // MARK: - Properties
     

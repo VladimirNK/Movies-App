@@ -11,40 +11,34 @@ final class PosterViewController: ViewController<PosterViewModel> {
     
     // MARK: - UI Elements
     
-    private lazy var posterImageView: UIImageView = {
-        let view = UIImageView()
-        view.contentMode = .scaleAspectFill
-        view.isUserInteractionEnabled = true
+    private lazy var posterImageView: UIImageView = .build {
+        $0.contentMode = .scaleAspectFill
+        $0.isUserInteractionEnabled = true
         
         let swipeDownGesture = UISwipeGestureRecognizer(target: self, action: #selector(onDismiss))
         swipeDownGesture.direction = .down
-        view.addGestureRecognizer(swipeDownGesture)
+        $0.addGestureRecognizer(swipeDownGesture)
         
         let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(handlePinchGesture))
-        view.addGestureRecognizer(pinchGesture)
-        return view
-    }()
+        $0.addGestureRecognizer(pinchGesture)
+    }
     
-    private lazy var closeButton: UIButton = {
-        let view = UIButton()
+    private lazy var closeButton: UIButton = .build {
         let largeConfig = UIImage.SymbolConfiguration(pointSize: Space.xl5, weight: .bold, scale: .small)
-        let largeBoldDoc = UIImage(systemName: "xmark.circle.fill", withConfiguration: largeConfig)
-        view.setImage(largeBoldDoc, for: .normal)
-        view.tintColor = .white
-        view.addTarget(self, action: #selector(onDismiss), for: .touchUpInside)
-        return view
-    }()
+        let largeBoldDoc = SystemIcons.close.image?.applyingSymbolConfiguration(largeConfig)
+        $0.setImage(largeBoldDoc, for: .normal)
+        $0.tintColor = .white
+        $0.addTarget(self, action: #selector(onDismiss), for: .touchUpInside)
+    }
     
-    private lazy var scrollView: UIScrollView = {
-        let view = UIScrollView()
-        view.minimumZoomScale = 1.0
-        view.maximumZoomScale = 3.0
-        view.showsVerticalScrollIndicator = false
-        view.showsHorizontalScrollIndicator = false
-        view.delegate = self
-        view.addSubview(posterImageView)
-        return view
-    }()
+    private lazy var scrollView: UIScrollView = .build {
+        $0.minimumZoomScale = 1.0
+        $0.maximumZoomScale = 3.0
+        $0.showsVerticalScrollIndicator = false
+        $0.showsHorizontalScrollIndicator = false
+        $0.delegate = self
+        $0.addSubview(posterImageView)
+    }
     
     // MARK: - Lifecycle
     
@@ -55,7 +49,7 @@ final class PosterViewController: ViewController<PosterViewModel> {
         input.send(.viewDidLoad)
     }
     
-    // MARK: - Setuo UI
+    // MARK: - Setup UI
     
     private func setupUI() {
         view.backgroundColor = .white
@@ -75,9 +69,8 @@ final class PosterViewController: ViewController<PosterViewModel> {
         }
         
         posterImageView.snp.makeConstraints {
-            $0.centerX.centerY.equalToSuperview()
-            $0.width.equalToSuperview()
-            $0.height.equalToSuperview()
+            $0.center.equalToSuperview()
+            $0.width.height.equalToSuperview()
         }
         
         closeButton.snp.makeConstraints {
@@ -143,6 +136,11 @@ extension PosterViewController: UIScrollViewDelegate {
         let horizontalPadding = imageViewSize.width < scrollViewSize.width ?
         (scrollViewSize.width - imageViewSize.width) / 2 : 0
         
-        scrollView.contentInset = UIEdgeInsets(top: verticalPadding, left: horizontalPadding, bottom: verticalPadding, right: horizontalPadding)
+        scrollView.contentInset = UIEdgeInsets(
+            top: verticalPadding,
+            left: horizontalPadding,
+            bottom: verticalPadding,
+            right: horizontalPadding
+        )
     }
 }

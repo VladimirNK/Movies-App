@@ -8,7 +8,9 @@
 import UIKit
 import SnapKit
 
-class RatingView: UIView {
+final class RatingView: UIView {
+    
+    // MARK: - UI Elements
     
     private lazy var shapeLayer: CAShapeLayer = .build {
         $0.fillColor = UIColor.clear.cgColor
@@ -30,6 +32,8 @@ class RatingView: UIView {
         $0.textColor = .white
     }
     
+    // MARK: - Init
+    
     init() {
         super.init(frame: .zero)
         setupView()
@@ -40,27 +44,10 @@ class RatingView: UIView {
         super.init(coder: coder)
     }
     
+    // MARK: - Methods
+    
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: 70, height: 70)
-    }
-    
-    private func setupView() {
-        backgroundColor = .black.withAlphaComponent(0.9)
-        layer.addSublayer(backgroundLayer)
-        layer.addSublayer(shapeLayer)
-        addSubview(percentageLabel)
-    }
-    
-    private func setupConstraints() {
-        percentageLabel.snp.makeConstraints {
-            $0.center.equalToSuperview()
-        }
-    }
-    
-    func setProgress(to progress: Double) {
-        let clampedProgress = min(max(progress, 0), 10) / 10
-        percentageLabel.text = "\(Int(clampedProgress * 100))%"
-        shapeLayer.strokeEnd = CGFloat(clampedProgress)
+        return Constants.RatingView.size
     }
     
     override func layoutSubviews() {
@@ -81,6 +68,25 @@ class RatingView: UIView {
         shapeLayer.path = circularPath.cgPath
         backgroundLayer.frame = bounds
         shapeLayer.frame = bounds
+    }
+    
+    private func setupView() {
+        backgroundColor = .black.withAlphaComponent(0.9)
+        layer.addSublayer(backgroundLayer)
+        layer.addSublayer(shapeLayer)
+        addSubview(percentageLabel)
+    }
+    
+    private func setupConstraints() {
+        percentageLabel.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+    }
+    
+    public func setProgress(to progress: Double) {
+        let clampedProgress = min(max(progress, 0), 10) / 10
+        percentageLabel.text = "\(Int(clampedProgress * 100))%"
+        shapeLayer.strokeEnd = CGFloat(clampedProgress)
     }
 }
 
