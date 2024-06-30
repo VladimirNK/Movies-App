@@ -10,11 +10,6 @@ import Combine
 
 class ViewController<ViewModel: ViewModelProtocol>: UIViewController {
     
-    // MARK: - UI Elements
-    
-    
-    
-    
     // MARK: - Properties
     
     let vm: ViewModel

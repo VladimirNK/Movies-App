@@ -9,6 +9,8 @@ import Foundation
 
 struct Movie {
     
+    //MARK: - Response
+    
     struct Response: Decodable {
         let page: Int
         let results: [Movie.Item]
@@ -21,6 +23,8 @@ struct Movie {
             case totalResults = "total_results"
         }
     }
+    
+    //MARK: - Item
     
     struct Item: Decodable {
         let adult: Bool?
@@ -54,6 +58,8 @@ struct Movie {
         }
     }
     
+    //MARK: - ViewModel
+    
     struct ViewModel {
         let id: Int
         let posterPath: String
@@ -71,6 +77,8 @@ struct Movie {
             self.releaseDate = response.releaseDate.toDate()
         }
     }
+    
+    //MARK: - Query Items Parameters
     
     struct Params: Encodable {
         let page: Int

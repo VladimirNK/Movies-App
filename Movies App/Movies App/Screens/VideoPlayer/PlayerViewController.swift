@@ -12,11 +12,9 @@ final class PlayerViewController: ViewController<PlayerViewModel> {
     
     // MARK: - UI Elements
     
-    private lazy var playerView: YTPlayerView = {
-        let view = YTPlayerView()
-        view.delegate = self
-        return view
-    }()
+    private lazy var playerView: YTPlayerView = .build {
+        $0.delegate = self
+    }
     
     // MARK: - Lifecycle
     

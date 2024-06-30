@@ -9,6 +9,8 @@ import Foundation
 
 struct MovieItem {
     
+    //MARK: - Response
+    
     struct Response: Decodable {
         let adult: Bool?
         let backdropPath: String?
@@ -54,30 +56,6 @@ struct MovieItem {
         }
     }
     
-    struct ViewModel {
-        let id: Int
-        let posterPath: String
-        let title: String
-        let releaseDate: Date
-        let originCountry: [String]
-        let genres: [String]
-        let overview: String
-        let voteAverage: Double
-        let video: Bool
-        
-        init(response: MovieItem.Response) {
-            self.id = response.id
-            self.posterPath = Constants.API.imagePath + response.posterPath
-            self.title = response.title
-            self.releaseDate = response.releaseDate.toDate()
-            self.originCountry = response.originCountry
-            self.genres = response.genres.map { $0.name }
-            self.overview = response.overview
-            self.voteAverage = response.voteAverage
-            self.video = response.video
-        }
-    }
-    
     struct MovieCollection: Decodable {
         let id: Int
         let name, posterPath, backdropPath: String
@@ -119,6 +97,34 @@ struct MovieItem {
             case name
         }
     }
+    
+    //MARK: - ViewModel
+    
+    struct ViewModel {
+        let id: Int
+        let posterPath: String
+        let title: String
+        let releaseDate: Date
+        let originCountry: [String]
+        let genres: [String]
+        let overview: String
+        let voteAverage: Double
+        let video: Bool
+        
+        init(response: MovieItem.Response) {
+            self.id = response.id
+            self.posterPath = Constants.API.imagePath + response.posterPath
+            self.title = response.title
+            self.releaseDate = response.releaseDate.toDate()
+            self.originCountry = response.originCountry
+            self.genres = response.genres.map { $0.name }
+            self.overview = response.overview
+            self.voteAverage = response.voteAverage
+            self.video = response.video
+        }
+    }
+    
+    //MARK: - Query Items Parameters
     
     struct Params: Encodable {
         let language: String

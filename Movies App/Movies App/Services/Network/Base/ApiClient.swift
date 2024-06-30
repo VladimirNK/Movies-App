@@ -16,8 +16,8 @@ extension ApiClient {
     var session: URLSession {
         let configuration = URLSessionConfiguration.default
         configuration.waitsForConnectivity = true
-        configuration.timeoutIntervalForRequest = 60
-        configuration.timeoutIntervalForResource = 300
+        configuration.timeoutIntervalForRequest = Constants.API.timeoutIntervalForRequest
+        configuration.timeoutIntervalForResource = Constants.API.timeoutIntervalForResource
         return URLSession(configuration: configuration)
     }
     

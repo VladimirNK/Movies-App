@@ -11,94 +11,77 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
     
     // MARK: - UI Elements
     
-    private lazy var movieTitle: UILabel = {
-        let view = UILabel()
-        view.font = .typography(.title)
-        view.textColor = .black
-        view.numberOfLines = 2
-        return view
-    }()
+    private lazy var movieTitleLabel: UILabel = .build {
+        $0.font = .typography(.title)
+        $0.textColor = .black
+        $0.numberOfLines = 2
+    }
     
-    private lazy var countryLabel: UILabel = {
-        let view = UILabel()
-        view.font = .typography(.subtitle)
-        view.textColor = .darkGray
-        view.numberOfLines = 2
-        return view
-    }()
+    private lazy var countryLabel: UILabel = .build {
+        $0.font = .typography(.subtitle)
+        $0.textColor = .darkGray
+        $0.numberOfLines = 2
+    }
     
-    private lazy var genresLabel: UILabel = {
-        let view = UILabel()
-        view.font = .typography(.body)
-        view.textColor = .red
-        view.numberOfLines = 2
-        return view
-    }()
+    private lazy var genresLabel: UILabel = .build {
+        $0.font = .typography(.body)
+        $0.textColor = .red
+        $0.numberOfLines = 2
+    }
     
-    private lazy var movieDescriptionLabel: UILabel = {
-        let view = UILabel()
-        view.font = .typography(.body)
-        view.textColor = .black
-        view.numberOfLines = .zero
-        return view
-    }()
+    private lazy var movieDescriptionLabel: UILabel = .build {
+        $0.font = .typography(.body)
+        $0.textColor = .black
+        $0.numberOfLines = .zero
+    }
     
-    private lazy var ratingLabel: UILabel = {
-        let view = UILabel()
-        view.font = .typography(.body)
-        view.textColor = .black
-        return view
-    }()
+    private lazy var ratingLabel: UILabel = .build {
+        $0.font = .typography(.body)
+        $0.textColor = .black
+    }
     
-    private lazy var spinner: UIActivityIndicatorView = {
-        let view = UIActivityIndicatorView(style: .large)
-        view.color = .black
-        return view
-    }()
+    private lazy var spinner: UIActivityIndicatorView = .build {
+        $0 = UIActivityIndicatorView(style: .large)
+        $0.color = .black
+    }
     
-    private lazy var posterImageView: UIImageView = {
-        let view = UIImageView()
-        view.contentMode = .scaleAspectFill
-        view.clipsToBounds = true
-        view.isUserInteractionEnabled = true
+    private lazy var posterImageView: UIImageView = .build {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(posterImageTapped))
-        view.addGestureRecognizer(tapGesture)
-        return view
-    }()
+        $0.addGestureRecognizer(tapGesture)
+        $0.contentMode = .scaleAspectFill
+        $0.clipsToBounds = true
+        $0.isUserInteractionEnabled = true
+    }
     
-    private lazy var trailerButton: UIButton = {
+    private lazy var trailerButton: UIButton = .build {
         var config = UIButton.Configuration.filled()
         config.image = SystemIcons.play.image
         config.title = LocalizedString.MovieDetailsScreen.playTrailer.localized
         config.imagePadding = Space.xs
         config.imagePlacement = .leading
-        let view = UIButton(configuration: config)
-        view.addTarget(self, action: #selector(trailerButtonDidTap), for: .touchUpInside)
-        return view
-    }()
+        $0 = UIButton(configuration: config)
+        $0.addTarget(self, action: #selector(trailerButtonDidTap), for: .touchUpInside)
+    }
     
-    private lazy var descriptionStack: UIStackView = {
+    private lazy var descriptionStack: UIStackView = .build {
         let subviews = [
-            movieTitle,
+            movieTitleLabel,
             countryLabel,
             genresLabel,
             ratingLabel,
             trailerButton,
             movieDescriptionLabel
         ]
-        let view = UIStackView(arrangedSubviews: subviews)
-        view.axis = .vertical
-        view.spacing = Space.m
-        view.distribution = .fill
-        view.isLayoutMarginsRelativeArrangement = true
-        return view
-    }()
+        $0 = UIStackView(arrangedSubviews: subviews)
+        $0.axis = .vertical
+        $0.spacing = Space.m
+        $0.distribution = .fill
+        $0.isLayoutMarginsRelativeArrangement = true
+    }
     
-    private lazy var scrollView: UIScrollView = {
-        let view = UIScrollView()
-        view.showsVerticalScrollIndicator = false
-        return view
-    }()
+    private lazy var scrollView: UIScrollView = .build {
+        $0.showsVerticalScrollIndicator = false
+    }
     
     private lazy var contentView = UIView()
     
@@ -177,9 +160,9 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
     private func configureContent(with movie: MovieItem.ViewModel) {
         self.title = movie.title
         posterImageView.loadImage(from: movie.posterPath)
-        movieTitle.text = movie.title
+        movieTitleLabel.text = movie.title
         countryLabel.text = formatCountries(from: movie, localeId: .localeIdentifier)
-        genresLabel.text = movie.genres.joined(separator: ", ")
+        genresLabel.text = movie.genres.joined(separator: .commaSeparator)
         movieDescriptionLabel.text = movie.overview
         ratingLabel.text = formatRating(movie.voteAverage)
     }
@@ -193,7 +176,7 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
     
     private func formatCountries(from model: MovieItem.ViewModel, localeId: String) -> String {
         let countries = model.originCountry.compactMap { countryName(from: $0, localeId: localeId) }
-        let countriesString = countries.joined(separator: ", ")
+        let countriesString = countries.joined(separator: .commaSeparator)
         let releaseYearString = model.releaseDate.yearAsString()
         return countriesString + " (\(releaseYearString))"
     }
@@ -203,7 +186,7 @@ final class DetailsViewController: ViewController<DetailsViewModel> {
             return .empty
         }
         let genreNames = indices.compactMap { genreDict[$0] }
-        return genreNames.joined(separator: ", ")
+        return genreNames.joined(separator: .commaSeparator)
     }
     
     private func formatRating(_ value: Double) -> String {
